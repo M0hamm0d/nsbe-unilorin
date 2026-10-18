@@ -75,7 +75,6 @@ export default async function ProgramsPage() {
               </article>
             ))}
           </div>
-          <p className="note">Show only programs the chapter has confirmed.</p>
         </div>
       </section>
 
