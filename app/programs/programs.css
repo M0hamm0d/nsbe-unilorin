@@ -1,0 +1,124 @@
+/* ===== Programs & Scholarships (append to globals.css) ===== */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+#programs, #scholarships, #partner { scroll-margin-top: 80px; }
+
+/* Intro */
+.pr-intro { padding: 40px 0 48px; }
+.pr-intro__grid { display: grid; gap: 24px; align-items: end; }
+.pr-title { font-size: clamp(38px, 6.5vw, 56px); letter-spacing: -0.01em; }
+.pr-lead { font-size: 16px; margin-bottom: 20px; max-width: 520px; }
+.pr-jumps { display: flex; flex-wrap: wrap; gap: 10px; }
+.pr-jump { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 18px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; background: var(--white); transition: background .15s; }
+.pr-jump:hover { background: var(--tint); }
+.pr-jump--on { background: var(--deep); border-color: var(--deep); color: var(--white); }
+.pr-jump--on:hover { background: var(--deep); }
+@media (min-width: 900px) { .pr-intro { padding: 64px 0 72px; } .pr-intro__grid { grid-template-columns: 1.1fr 1fr; gap: 64px; } .pr-lead { font-size: 17px; } }
+
+/* Section scaffolding */
+.pr-section { padding: 0 0 64px; }
+.pr-head { display: grid; gap: 12px; margin-bottom: 28px; }
+.pr-head .eyebrow { margin-bottom: 14px; }
+.pr-h2 { font-size: clamp(28px, 4.2vw, 42px); letter-spacing: -0.01em; max-width: 640px; }
+.pr-head__note { color: var(--muted); max-width: 440px; }
+@media (min-width: 900px) {
+  .pr-section { padding-bottom: 96px; }
+  .pr-head { grid-template-columns: 1fr auto; align-items: end; gap: 32px; margin-bottom: 36px; }
+}
+
+/* Program cards */
+.pr-bento { display: grid; gap: 16px; }
+.pr-card { position: relative; isolation: isolate; overflow: hidden; border-radius: var(--radius); min-height: 360px; display: flex; flex-direction: column; justify-content: flex-end; }
+.pr-card--card { background: var(--card-green); }
+.pr-card--brand { background: var(--green); }
+.pr-card--dark { background: var(--near-black); }
+.pr-card__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+.pr-card__panel { margin: 12px; padding: 22px 20px; border-radius: 12px; background: rgba(9, 27, 16, 0.94); color: var(--on-dark); }
+.pr-card__panel h3 { color: var(--white); font-size: 24px; margin: 10px 0 8px; }
+.pr-card__panel p { font-size: 14px; line-height: 1.55; }
+.pr-pill { display: inline-block; font-size: 12px; font-weight: 600; color: var(--white); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 999px; padding: 2px 12px; }
+.pr-more { display: inline-block; margin-top: 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pale); border-bottom: 1px solid var(--pale); padding: 4px 0 2px; }
+.pr-more:hover { color: var(--white); border-color: var(--white); }
+@media (min-width: 640px) {
+  .pr-bento { grid-template-columns: 1fr 1fr; }
+  .pr-card--big { grid-column: 1 / -1; min-height: 440px; }
+  .pr-card--big .pr-card__panel { padding: 28px; }
+  .pr-card--big .pr-card__panel h3 { font-size: 30px; }
+}
+@media (min-width: 900px) {
+  .pr-bento { grid-template-columns: 1.5fr 1fr; grid-template-rows: 290px 290px; gap: 20px; }
+  .pr-card { min-height: 0; }
+  .pr-card--big { grid-column: auto; grid-row: 1 / span 2; }
+  .pr-card--big .pr-card__panel { margin: 24px; padding: 28px 32px; }
+  .pr-card--big .pr-card__panel h3 { font-size: 34px; }
+  .pr-card--big .pr-card__panel p { font-size: 15px; max-width: 520px; }
+}
+
+/* Scholarships */
+.pr-band { padding: 56px 0; background: var(--tint); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.pr-sc-grid { display: grid; gap: 20px; }
+.pr-sc { display: flex; flex-direction: column; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+.pr-sc__top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 12px; margin-bottom: 20px; }
+.pr-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; border-radius: 999px; padding: 4px 12px 4px 9px; }
+.pr-status--open { background: var(--tint); color: var(--green-text); }
+.pr-status--closed { background: var(--white); color: var(--muted); border: 1px solid var(--border-strong); }
+.pr-sc__funder { font-size: 13px; color: var(--muted); }
+.pr-sc h3 { font-size: 26px; margin-bottom: 10px; }
+.pr-sc__desc { color: var(--muted); font-size: 15px; }
+.pr-kv { display: grid; grid-template-columns: 100px 1fr; margin: 24px 0 28px; border-top: 1px solid var(--border); }
+.pr-kv dt, .pr-kv dd { margin: 0; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+.pr-kv dt { color: var(--muted); }
+.pr-kv dd { font-weight: 600; }
+.pr-sc__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: auto; }
+.pr-na { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 18px; font-size: 14px; color: var(--muted); border: 1px dashed var(--border-strong); border-radius: 10px; }
+
+/* How to apply: heading, then three steps */
+.pr-apply { display: grid; gap: 24px; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border-strong); }
+.pr-apply__intro .eyebrow { margin-bottom: 10px; }
+.pr-apply__intro h3 { font-size: 26px; }
+.pr-apply__steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; }
+.pr-apply__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 36px; }
+
+.pr-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; }
+.pr-step { display: flex; gap: 16px; align-items: flex-start; }
+.pr-num { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--deep); color: var(--white); font-weight: 700; font-size: 15px; display: flex; align-items: center; justify-content: center; }
+.pr-step h4 { font-size: 17px; font-weight: 600; margin: 0 0 2px; }
+.pr-step p { color: var(--muted); font-size: 15px; }
+
+@media (min-width: 900px) {
+  .pr-band { padding: 96px 0; }
+  .pr-sc-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .pr-sc { padding: 32px; }
+}
+@media (min-width: 768px) { .pr-apply__steps { grid-template-columns: repeat(3, 1fr); gap: 28px; } }
+@media (min-width: 1100px) {
+  .pr-apply { grid-template-columns: 1fr 2.4fr; gap: 48px; align-items: start; }
+}
+
+/* Partner with us */
+.pr-partner { padding: 64px 0 72px; }
+.pr-partner__grid { display: grid; gap: 40px; align-items: start; }
+.pr-partner__lead { margin: 16px 0 32px; font-size: 16px; max-width: 540px; }
+.pr-packet { display: flex; flex-direction: column; gap: 20px; background: var(--deep); color: var(--on-dark); border-radius: var(--radius); padding: 28px 24px; }
+.pr-packet__icon { width: 56px; height: 56px; border-radius: 12px; background: var(--card-green); color: var(--white); display: flex; align-items: center; justify-content: center; }
+.pr-packet h3 { color: var(--white); font-size: 28px; }
+.pr-packet .eyebrow { margin-bottom: 10px; }
+.pr-packet__meta { font-size: 13px; opacity: 0.8; }
+.pr-packet__actions { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.pr-packet .btn { gap: 10px; white-space: normal; text-align: left; }
+.pr-packet .link { color: var(--white); }
+.pr-logos { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); background: var(--white); border: 1px solid var(--border); border-radius: 4px; }
+.pr-logos li { display: flex; align-items: center; justify-content: center; height: 96px; padding: 20px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.pr-logos li:nth-child(2n) { border-right: 0; }
+.pr-logos li:nth-last-child(-n+2) { border-bottom: 0; }
+.pr-logos img { max-height: 36px; width: auto; max-width: 100%; object-fit: contain; filter: grayscale(1); opacity: 0.75; transition: filter .2s, opacity .2s; }
+.pr-logos li:hover img { filter: none; opacity: 1; }
+@media (min-width: 768px) {
+  .pr-logos { grid-template-columns: repeat(4, 1fr); }
+  .pr-logos li, .pr-logos li:nth-child(2n), .pr-logos li:nth-last-child(-n+2) { height: 104px; border-right: 1px solid var(--border); border-bottom: 0; }
+  .pr-logos li:last-child { border-right: 0; }
+}
+@media (min-width: 900px) {
+  .pr-partner { padding: 96px 0 104px; }
+  .pr-partner__grid { grid-template-columns: 1.15fr 1fr; gap: 72px; }
+  .pr-packet { padding: 36px; }
+}
