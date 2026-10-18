@@ -52,4 +52,6 @@ export function formatDate(iso: string) {
   const [y, m, d] = iso.split("-").map(Number);
   return `${d} ${MONTHS[m - 1]} ${y}`;
 }
-export const isOpen = (deadline: string, today = new Date().toISOString().slice(0, 10)) => deadline >= today;
+// export const isOpen = (deadline: string, today = new Date().toISOString().slice(0, 10)) => deadline>= today;
+export const isOpen = (deadline: string, today: string) =>
+  deadline >= today;

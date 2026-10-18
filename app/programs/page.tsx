@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import Link from "next/link";
 import './programs.css'
 import {
@@ -12,6 +13,8 @@ export const metadata: Metadata = {
     "NSBE Unilorin programs, scholarships for engineering students, and how organisations can partner with the chapter.",
 };
 
+export const instant = false;
+
 // export const revalidate = 3600; // keep open/closed scholarship status fresh
 
 const CalendarIcon = () => (
@@ -20,7 +23,8 @@ const CalendarIcon = () => (
   </svg>
 );
 
-export default function ProgramsPage() {
+export default async function ProgramsPage() {
+  await connection(); // ensure DB connection is established before rendering page
   return (
     <>
       {/* Intro */}
@@ -88,7 +92,7 @@ export default function ProgramsPage() {
 
           <div className="pr-sc-grid">
             {SCHOLARSHIPS.map((s) => {
-              const open = isOpen(s.deadline);
+              const open = isOpen(s.deadline, new Date().toISOString().slice(0, 10));
               return (
                 <article className="pr-sc" key={s.id}>
                   <div className="pr-sc__top">
