@@ -1,0 +1,117 @@
+/* Styles for the join and tutorial-interest route group. */
+.forms-page { --error: #a32d1f; }
+.forms-page .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.fm-title { font-size: clamp(38px, 6.5vw, 56px); letter-spacing: -0.01em; }
+.fm-lead { font-size: 17px; max-width: 520px; }
+.fm-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 20px; }
+@media (min-width: 640px) { .fm-card { padding: 40px; } }
+
+/* ----- Join page layout ----- */
+.fm-page { padding: 40px 0 72px; }
+.fm-join { display: grid; gap: 40px; align-items: start; }
+.fm-side .fm-title { margin: 0 0 24px; }
+.fm-side .fm-lead { margin-bottom: 40px; }
+.fm-block { border-top: 1px solid var(--border-strong); padding-top: 28px; margin-bottom: 40px; }
+.fm-block .eyebrow { margin-bottom: 10px; }
+.fm-block p:not(.eyebrow) { max-width: 480px; }
+.fm-block--last { margin-bottom: 0; }
+.fm-steps-label { margin-bottom: 20px; }
+.fm-steps { list-style: none; margin: 0 0 40px; padding: 0; display: grid; gap: 22px; }
+.fm-step { display: flex; gap: 16px; align-items: flex-start; }
+.fm-num { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--deep); color: var(--white); font-weight: 700; font-size: 15px; display: flex; align-items: center; justify-content: center; }
+.fm-step h3 { font-family: var(--font-sans), sans-serif; font-weight: 600; font-size: 17px; margin: 0 0 2px; }
+.fm-step p { color: var(--muted); font-size: 15px; }
+@media (min-width: 1024px) {
+  .fm-page { padding: 64px 0 96px; }
+  .fm-join { grid-template-columns: 1fr 1.1fr; gap: 80px; }
+}
+
+/* ----- Tutorial page layout ----- */
+.fm-tut-intro { padding: 40px 0 32px; }
+.fm-tut-intro__grid { display: grid; gap: 20px; align-items: end; }
+.fm-tut-body { padding: 0 0 72px; }
+.fm-tut { display: grid; gap: 32px; align-items: start; }
+@media (min-width: 900px) { .fm-tut-intro { padding: 64px 0 40px; } .fm-tut-intro__grid { grid-template-columns: 1.1fr 1fr; gap: 64px; } }
+@media (min-width: 1024px) { .fm-tut-body { padding-bottom: 104px; } .fm-tut { grid-template-columns: 1.5fr 1fr; gap: 40px; } }
+
+.fm-privacy { background: var(--deep); color: var(--on-dark); border-radius: var(--radius); padding: 28px 20px; }
+.fm-privacy h2 { color: var(--white); font-size: 28px; margin-bottom: 20px; }
+.fm-privacy .eyebrow { margin-bottom: 14px; }
+.fm-privacy dl { margin: 0 0 16px; }
+.fm-privacy__row { padding: 16px 0; border-top: 1px solid rgba(213, 238, 220, 0.2); }
+.fm-privacy dt { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pale); margin-bottom: 4px; }
+.fm-privacy dd { margin: 0; font-size: 15px; overflow-wrap: anywhere; }
+.fm-privacy .link { color: var(--white); }
+@media (min-width: 640px) { .fm-privacy { padding: 36px; } }
+
+/* ----- Form ----- */
+.fm-form { display: flex; flex-direction: column; gap: 26px; }
+.fm-form__title { font-size: 30px; margin-bottom: 8px; }
+.fm-form__note { font-size: 14px; color: var(--muted); }
+.fm-form__foot { font-size: 13px; color: var(--muted); text-align: center; }
+.fm-row { display: grid; gap: 26px; }
+@media (min-width: 640px) { .fm-row { grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; } }
+
+.fm-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.fm-fieldset { border: 0; padding: 0; margin: 0; }
+.fm-label { font-size: 14px; font-weight: 600; padding: 0; }
+.fm-opt { font-weight: 500; color: var(--muted); }
+.fm-help { font-size: 13px; color: var(--muted); }
+
+.fm-input { width: 100%; height: 52px; padding: 0 16px; font: inherit; font-size: 16px; color: var(--ink); background: var(--white); border: 1px solid var(--border-strong); border-radius: 10px; }
+.fm-input::placeholder { color: var(--muted); }
+.fm-input:focus { outline: 2px solid var(--green); outline-offset: 1px; border-color: var(--green); }
+.fm-textarea { height: auto; min-height: 112px; padding: 14px 16px; line-height: 1.5; resize: vertical; }
+.fm-select { appearance: none; padding-right: 44px; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23566259' stroke-width='1.6'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
+.fm-select[data-empty="true"] { color: var(--muted); }
+
+.fm-input[aria-invalid="true"] { border-color: var(--error); box-shadow: 0 0 0 1px var(--error); }
+.fm-input[aria-invalid="true"]:focus { outline-color: var(--error); }
+.fm-error { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; font-weight: 600; color: var(--error); margin: 0; }
+.fm-error svg { flex: none; margin-top: 2px; }
+
+/* Level chips: real radio buttons, visually styled */
+.fm-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.fm-chip { position: relative; }
+.fm-chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.fm-chip span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; font-size: 15px; font-weight: 500; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--white); transition: background .15s; }
+.fm-chip:hover span { background: var(--tint); }
+.fm-chip input:checked + span { background: var(--deep); border-color: var(--deep); color: var(--white); }
+.fm-chip input:focus-visible + span { outline: 2px solid var(--green-text); outline-offset: 3px; }
+.fm-fieldset--invalid .fm-chip span { border-color: var(--error); }
+
+/* Checkboxes */
+.fm-check { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; cursor: pointer; }
+.fm-check input, .fm-interest input { appearance: none; flex: none; margin: 0; background: var(--white); border: 1.5px solid var(--border-strong); cursor: pointer; }
+.fm-check input { width: 22px; height: 22px; margin-top: 2px; border-radius: 6px; }
+.fm-check input:checked, .fm-interest input:checked {
+  background: var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E") center / 14px no-repeat;
+  border-color: var(--green);
+}
+.fm-check input[aria-invalid="true"] { border-color: var(--error); }
+.fm-check input:focus-visible, .fm-interest input:focus-visible { outline: 2px solid var(--green-text); outline-offset: 2px; }
+
+.fm-interests { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 480px) { .fm-interests { grid-template-columns: 1fr 1fr; } }
+.fm-interest { display: flex; gap: 12px; align-items: center; min-height: 48px; padding: 12px 14px; font-size: 15px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
+.fm-interest input { width: 20px; height: 20px; border-radius: 5px; }
+
+.fm-submit { width: 100%; min-height: 52px; font-size: 16px; }
+.fm-submit:disabled { opacity: 0.7; cursor: progress; }
+.fm-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ----- Submitted and error states ----- */
+.fm-state { display: flex; flex-direction: column; gap: 20px; }
+.fm-state--error { border-color: var(--error); }
+.fm-state__icon { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.fm-state__icon--ok { background: var(--tint); color: var(--green-text); }
+.fm-state__icon--bad { background: var(--white); color: var(--error); border: 1.5px solid var(--error); }
+.fm-state__eyebrow { margin: 0; }
+.fm-state--error .fm-state__eyebrow { color: var(--error); }
+.fm-state h2 { font-size: clamp(28px, 4vw, 34px); }
+.fm-state h2:focus { outline: none; }
+.fm-state__text { color: var(--muted); font-size: 17px; }
+.fm-state__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 4px; }
+.fm-state__actions .btn:disabled { opacity: 0.7; cursor: progress; }
+@media (prefers-reduced-motion: reduce) { .forms-page * { transition: none !important; } }

@@ -1,0 +1,11 @@
+import { guard } from "@/lib/admin/auth";
+import NoAccess from "@/components/admin/NoAccess";
+import ResourcesManager from "@/components/admin/ResourcesManager";
+
+export const metadata = { title: "Academic resources" };
+
+export default async function Page() {
+  const { allowed } = await guard("resources");
+  if (!allowed) return <NoAccess area="Academic resources" />;
+  return <ResourcesManager />;
+}

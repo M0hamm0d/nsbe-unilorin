@@ -46,7 +46,7 @@ export default function SiteFooter() {
                 <Link href="/contact">Contact / Join</Link>
               </li>
               <li>
-                <Link href="/contact#tutorial-form">Tutorial interest form</Link>
+                <Link href="/tutorial-interest">Tutorial interest form</Link>
               </li>
             </ul>
           </nav>
