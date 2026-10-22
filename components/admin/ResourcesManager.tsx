@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useMockCollection } from "@/lib/admin/use-mock";
 import { RESOURCES } from "@/lib/admin/mock-data";
 import type { PubStatus, Resource } from "@/lib/admin/types";
 import { DEPARTMENTS, LEVELS, RESOURCE_TYPES } from "@/lib/academic-resources";
 import { fmtDate, nowISO } from "@/lib/admin/format";
+import { saveAdminResource, deleteAdminResource } from "@/lib/admin/actions";
 import { useAdmin } from "./AdminProvider";
-import { Badge, EmptyState, FilterSelect, PageHeader, SearchBox, StatusBadge, Tabs } from "./ui";
+import { Badge, ConfirmDialog, EmptyState, FilterSelect, PageHeader, SearchBox, StatusBadge, Tabs } from "./ui";
 import Icon from "./Icon";
 
 const PAGE = 8;
@@ -17,12 +17,33 @@ export const typeLabel = (v: string) => RESOURCE_TYPES.find((t) => t.value === v
 export const findDuplicate = (r: Pick<Resource, "id" | "code" | "type" | "session">, all: Resource[]) =>
   all.find((x) => x.id !== r.id && x.status !== "archived" && x.code.replace(/\s/g, "").toLowerCase() === r.code.replace(/\s/g, "").toLowerCase() && x.type === r.type && x.session === r.session);
 
-export default function ResourcesManager() {
-  const { items, update } = useMockCollection<Resource>("resources", RESOURCES);
+export default function ResourcesManager({ initialItems }: { initialItems?: Resource[] } = {}) {
+  const [items, setItems] = useState<Resource[]>(
+    initialItems && initialItems.length > 0 ? initialItems : RESOURCES
+  );
   const { toast, audit } = useAdmin();
   const [tab, setTab] = useState<PubStatus>("published");
-  const [q, setQ] = useState(""); const [dept, setDept] = useState(""); const [lvl, setLvl] = useState(""); const [type, setType] = useState(""); const [ses, setSes] = useState("");
+  const [q, setQ] = useState("");
+  const [dept, setDept] = useState("");
+  const [lvl, setLvl] = useState("");
+  const [type, setType] = useState("");
+  const [ses, setSes] = useState("");
   const [shown, setShown] = useState(PAGE);
+  const [del, setDel] = useState<Resource | null>(null);
+
+  // Clear legacy mock data from localStorage
+  useEffect(() => {
+    try {
+      localStorage.removeItem("nsbe-admin-mock:v1:resources");
+    } catch {}
+  }, []);
+
+  // Sync when initialItems changes
+  useEffect(() => {
+    if (initialItems && initialItems.length > 0) {
+      setItems(initialItems);
+    }
+  }, [initialItems]);
 
   const sessions = Array.from(new Set(items.map((r) => r.session).filter(Boolean))).sort().reverse().map((s) => ({ value: s, label: s }));
   const rows = items.filter((r) => r.status === tab && (!dept || r.dept === dept) && (!lvl || r.level === lvl) && (!type || r.type === type) && (!ses || r.session === ses) &&
@@ -30,10 +51,21 @@ export default function ResourcesManager() {
   const dupes = rows.filter((r) => findDuplicate(r, items)).length;
   const count = (s: PubStatus) => items.filter((r) => r.status === s).length;
 
-  function setStatus(r: Resource, status: PubStatus, msg: string) {
+  async function setStatus(r: Resource, status: PubStatus, msg: string) {
     if (status === "published" && !r.fileName) return toast("Upload a file before publishing.", "bad");
-    update(r.id, { status, updatedAt: nowISO().slice(0, 10) });
-    audit(`${msg} ${r.code} ${r.title}`); toast(`${msg} ${r.code}.`);
+    const next = { ...r, status, updatedAt: nowISO().slice(0, 10) };
+    setItems((prev) => prev.map((x) => (x.id === r.id ? next : x)));
+    audit(`${msg} ${r.code} ${r.title}`);
+    toast(`${msg} ${r.code}.`);
+    await saveAdminResource(next);
+  }
+
+  async function handleDelete(target: Resource) {
+    setItems((prev) => prev.filter((x) => x.id !== target.id));
+    audit(`Deleted resource ${target.code} ${target.title}`);
+    toast(`Deleted ${target.code}.`);
+    setDel(null);
+    await deleteAdminResource(target.id);
   }
 
   return (
@@ -66,12 +98,24 @@ export default function ResourcesManager() {
                   {r.status === "draft" && <button className="adm-btn adm-sm" onClick={() => setStatus(r, "published", "Published")}>Publish</button>}
                   {r.status === "published" && <button className="adm-btn2 adm-sm" onClick={() => setStatus(r, "archived", "Archived")}>Archive</button>}
                   {r.status === "archived" && <button className="adm-btn2 adm-sm" onClick={() => setStatus(r, "draft", "Restored")}>Restore</button>}
+                  <button className="adm-btnd adm-sm" onClick={() => setDel(r)}>Delete</button>
                 </div></td>
               </tr>))}</tbody></table></div>
           <div className="adm-pager"><span>Showing {Math.min(shown, rows.length)} of {rows.length}{dupes ? ` · ${dupes} possible duplicate${dupes > 1 ? "s" : ""} to review` : ""}</span>
             {shown < rows.length && <button className="adm-btn2 adm-sm" onClick={() => setShown((s) => s + PAGE)}>Load more</button>}</div>
         </>) : <EmptyState title="No resources match" text="Try removing a filter, or add a new resource." action={<button className="adm-btn2" onClick={() => { setQ(""); setDept(""); setLvl(""); setType(""); setSes(""); }}>Clear filters</button>} />}
       </section>
+
+      <ConfirmDialog
+        open={!!del}
+        danger
+        title={`Delete “${del?.code ?? ""}”?`}
+        confirmLabel="Delete permanently"
+        onCancel={() => setDel(null)}
+        onConfirm={() => { if (del) handleDelete(del); }}
+      >
+        This permanently removes the academic resource from both the admin panel and public Academic Hub. It cannot be undone.
+      </ConfirmDialog>
     </>
   );
 }

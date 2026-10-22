@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { cacheLife } from "next/cache";
-import { EVENTS, dateParts, splitEvents, type ChapterEvent } from "@/lib/events";
+import { connection } from "next/server";
+import { dateParts, splitEvents, type ChapterEvent } from "@/lib/events";
+import { getPublicEvents } from "@/lib/admin/actions";
 import PastEvents from "@/components/PastEvents";
 import Image from "next/image";
 import "./events.css";
@@ -11,6 +12,8 @@ export const metadata: Metadata = {
   description:
     "Upcoming NSBE Unilorin events with date, time, venue, organizer and registration links, plus a record of past events.",
 };
+
+export const instant = false;
 
 function RegisterAction({ e }: { e: ChapterEvent }) {
   return e.registerUrl ? (
@@ -23,12 +26,12 @@ function RegisterAction({ e }: { e: ChapterEvent }) {
 }
 
 async function getEventsByDate() {
-  "use cache";
-  cacheLife("hours");
-  return splitEvents(EVENTS);
+  const events = await getPublicEvents();
+  return splitEvents(events);
 }
 
 export default async function EventsPage() {
+  await connection();
   const { upcoming, past } = await getEventsByDate();
   const [next, ...rest] = upcoming;
 

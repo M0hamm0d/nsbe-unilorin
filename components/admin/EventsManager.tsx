@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useMockCollection } from "@/lib/admin/use-mock";
 import { EVENTS } from "@/lib/admin/mock-data";
 import type { AdminEvent } from "@/lib/admin/types";
 import { fmtDate, fmtTime, isPast, nowISO } from "@/lib/admin/format";
+import { saveAdminEvent, deleteAdminEvent } from "@/lib/admin/actions";
 import { useAdmin } from "./AdminProvider";
 import { Badge, ConfirmDialog, Dialog, EmptyState, FilterSelect, PageHeader, SearchBox, StatusBadge, Tabs } from "./ui";
 import Icon from "./Icon";
@@ -30,13 +30,31 @@ export function EventPreview({ e }: { e: AdminEvent }) {
   );
 }
 
-export default function EventsManager() {
-  const { items, update, remove, ready } = useMockCollection<AdminEvent>("events", EVENTS);
+export default function EventsManager({ initialItems }: { initialItems?: AdminEvent[] } = {}) {
+  const [items, setItems] = useState<AdminEvent[]>(
+    initialItems && initialItems.length > 0 ? initialItems : EVENTS
+  );
   const { toast, audit } = useAdmin();
   const [tab, setTab] = useState<Tab>("published");
-  const [q, setQ] = useState(""); const [org, setOrg] = useState(""); const [reg, setReg] = useState("");
+  const [q, setQ] = useState("");
+  const [org, setOrg] = useState("");
+  const [reg, setReg] = useState("");
   const [del, setDel] = useState<AdminEvent | null>(null);
   const [prev, setPrev] = useState<AdminEvent | null>(null);
+
+  // Clear legacy localStorage mock data
+  useEffect(() => {
+    try {
+      localStorage.removeItem("nsbe-admin-mock:v1:events");
+    } catch {}
+  }, []);
+
+  // Sync if initialItems updates
+  useEffect(() => {
+    if (initialItems && initialItems.length > 0) {
+      setItems(initialItems);
+    }
+  }, [initialItems]);
 
   const inTab = (e: AdminEvent, t: Tab) =>
     t === "published" ? e.status === "published" && !isPast(e.date)
@@ -50,10 +68,20 @@ export default function EventsManager() {
     `${e.title} ${e.venue} ${e.organizer}`.toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => (tab === "past" ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date)));
 
-  function setStatus(e: AdminEvent, status: AdminEvent["status"], msg: string) {
-    update(e.id, { status, updatedAt: nowISO().slice(0, 10) });
+  async function setStatus(e: AdminEvent, status: AdminEvent["status"], msg: string) {
+    const next = { ...e, status, updatedAt: nowISO().slice(0, 10) };
+    setItems((prev) => prev.map((x) => (x.id === e.id ? next : x)));
     audit(`${msg} ${e.title}`);
     toast(`${msg} “${e.title}”.`);
+    await saveAdminEvent(next);
+  }
+
+  async function handleDelete(target: AdminEvent) {
+    setItems((prev) => prev.filter((x) => x.id !== target.id));
+    audit(`Deleted event ${target.title}`);
+    toast(`Deleted “${target.title}”.`);
+    setDel(null);
+    await deleteAdminEvent(target.id);
   }
 
   return (
@@ -93,7 +121,7 @@ export default function EventsManager() {
                   </div></td>
                 </tr>);
             })}</tbody></table></div>
-        ) : <EmptyState title={ready ? "No events here" : "Loading…"} text="Nothing matches this tab and these filters." action={<button className="adm-btn2" onClick={() => { setQ(""); setOrg(""); setReg(""); }}>Clear filters</button>} />}
+        ) : <EmptyState title="No events here" text="Nothing matches this tab and these filters." action={<button className="adm-btn2" onClick={() => { setQ(""); setOrg(""); setReg(""); }}>Clear filters</button>} />}
       </section>
       <p className="adm-note">An event is labelled Past once its date has gone. Registration shows Open, Closed or No link set from the registration link and deadline.</p>
 
@@ -102,7 +130,8 @@ export default function EventsManager() {
       </Dialog>
       <ConfirmDialog open={!!del} danger title={`Delete “${del?.title ?? ""}”?`} confirmLabel="Delete permanently" onCancel={() => setDel(null)}
         extra={del && del.status !== "archived" ? <button className="adm-btn2" onClick={() => { setStatus(del, "archived", "Archived"); setDel(null); }}>Archive instead</button> : null}
-        onConfirm={() => { if (!del) return; remove(del.id); audit(`Deleted event ${del.title}`); toast(`Deleted “${del.title}”.`); setDel(null); }}>
+        onConfirm={async () => { if (del) await handleDelete(del); }}
+      >
         This permanently removes the event from the admin and the public Events page. It cannot be undone. Archive it instead to keep a record.
       </ConfirmDialog>
     </>

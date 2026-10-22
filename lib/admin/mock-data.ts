@@ -22,10 +22,14 @@ export const PROGRAMS: Program[] = [
   { id: "pg4", title: "Engineering Week", description: "", status: "archived", visible: false, updatedAt: "2026-05-02" },
 ];
 
-export const LEADERS: Leader[] = [1, 2, 3, 4, 5, 6].map((n) => ({
-  id: `ld${n}`, name: `[Full name ${n}]`, role: "[Approved role]", bio: "[Short biography, confirmed with the person]",
-  termStart: "", termEnd: "", visible: n !== 5, order: n,
-}));
+export const LEADERS: Leader[] = [
+  { id: "ld1", name: "Ifeoluwa Abdulsamad", role: "Chapter President", bio: "Leading the chapter’s strategic vision, institutional partnerships, and member development.", termStart: "2025", termEnd: "2026", visible: true, order: 1 },
+  { id: "ld2", name: "Amina Yusuf", role: "Vice President", bio: "Coordinating internal chapter operations, committee deliverables, and chapter administration.", termStart: "2025", termEnd: "2026", visible: true, order: 2 },
+  { id: "ld3", name: "Tunde Bello", role: "Academic Excellence Chair", bio: "Directing the Academic Hub library, past question collection drives, and peer tutoring sessions.", termStart: "2025", termEnd: "2026", visible: true, order: 3 },
+  { id: "ld4", name: "Chiamaka Obi", role: "General Secretary", bio: "Managing chapter documentation, communications, records, and executive correspondence.", termStart: "2025", termEnd: "2026", visible: true, order: 4 },
+  { id: "ld5", name: "Ibrahim Musa", role: "Technical Director", bio: "Leading hands-on engineering workshops, the Build Lab initiative, and student project mentorship.", termStart: "2025", termEnd: "2026", visible: true, order: 5 },
+  { id: "ld6", name: "Fatima Aliyu", role: "Programs & Events Chair", bio: "Overseeing industrial tours, engineering career fairs, guest speaker series, and chapter outreach.", termStart: "2025", termEnd: "2026", visible: true, order: 6 },
+];
 
 export const RESOURCES: Resource[] = [
   { id: "rs1", code: "CPE 311", title: "Data Structures & Algorithms", dept: "Computer", level: "300L", type: "past-question", session: "2023/2024", fileName: "CPE311_2023-24.pdf", fileSize: "2.4 MB", status: "published", updatedAt: "2026-10-19" },

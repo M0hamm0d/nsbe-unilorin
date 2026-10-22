@@ -153,18 +153,46 @@ export function ConfirmDialog({ open, title, children, confirmLabel, danger, onC
 }
 
 export function ImageDrop({ label, value, onChange, maxMB = 5, hint }: { label: string; value?: string; onChange: (name?: string) => void; maxMB?: number; hint?: string }) {
-  const [preview, setPreview] = useState<string>();
+  const [preview, setPreview] = useState<string | undefined>(value);
   const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
   const input = useRef<HTMLInputElement>(null);
-  useEffect(() => () => { if (preview) URL.revokeObjectURL(preview); }, [preview]);
 
-  function pick(f?: File) {
+  useEffect(() => {
+    if (value) setPreview(value);
+  }, [value]);
+
+  async function pick(f?: File) {
     if (!f) return;
     if (!/^image\/(jpeg|png|webp)$/.test(f.type)) return setErr("Choose a JPG, PNG or WebP image.");
     if (f.size > maxMB * 1024 * 1024) return setErr(`That image is over ${maxMB} MB. Choose a smaller one.`);
     setErr("");
-    setPreview(URL.createObjectURL(f));
-    onChange(f.name);
+    setBusy(true);
+
+    const tempUrl = URL.createObjectURL(f);
+    setPreview(tempUrl);
+
+    const formData = new FormData();
+    formData.append("file", f);
+    formData.append("folder", "leaders");
+
+    try {
+      const res = await fetch("/api/admin/media/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.ok && data.url) {
+        setPreview(data.url);
+        onChange(data.url);
+      } else {
+        setErr(data.error || "Upload failed.");
+      }
+    } catch {
+      setErr("Network error while uploading image.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -172,11 +200,11 @@ export function ImageDrop({ label, value, onChange, maxMB = 5, hint }: { label: 
       <span className="adm-lb">{label}</span>
       <div className="adm-dz" onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); pick(e.dataTransfer.files[0]); }}>
         {preview ? <img src={preview} alt="" className="adm-dz__img" /> : <Icon name="upl" size={22} />}
-        <b>{value ? value : "Drag an image here, or choose a file"}</b>
+        <b>{busy ? "Uploading photo to cloud…" : value ? (value.startsWith("http") ? "Photo uploaded" : value) : "Drag an image here, or choose a file"}</b>
         <span>{hint ?? `JPG, PNG or WebP, up to ${maxMB} MB. Use approved images only.`}</span>
         <div className="adm-actions" style={{ justifyContent: "center" }}>
-          <button type="button" className="adm-btn2 adm-sm" onClick={() => input.current?.click()}>{value ? "Replace" : "Choose file"}</button>
-          {value && <button type="button" className="adm-btn2 adm-sm" onClick={() => { setPreview(undefined); onChange(undefined); }}>Remove</button>}
+          <button type="button" className="adm-btn2 adm-sm" disabled={busy} onClick={() => input.current?.click()}>{value ? "Replace" : "Choose file"}</button>
+          {value && <button type="button" className="adm-btn2 adm-sm" disabled={busy} onClick={() => { setPreview(undefined); onChange(undefined); }}>Remove</button>}
         </div>
         <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" className="adm-sr" onChange={(e) => pick(e.target.files?.[0])} />
       </div>

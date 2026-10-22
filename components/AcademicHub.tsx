@@ -17,7 +17,7 @@ type Sort = "newest" | "code" | "title";
 const typeLabel = (t: ResourceType) => RESOURCE_TYPES.find((x) => x.value === t)!.label;
 const deptName = (slug: string) => DEPARTMENTS.find((d) => d.slug === slug)?.name ?? slug;
 
-export default function AcademicHub() {
+export default function AcademicHub({ initialResources }: { initialResources?: Resource[] }) {
   const [query, setQuery] = useState("");
   const [type, setType] = useState<ResourceType>("past-question");
   const [levels, setLevels] = useState<string[]>([]);
@@ -56,13 +56,15 @@ export default function AcademicHub() {
   // Reset pagination whenever the filters change
   useEffect(() => setVisible(PAGE_SIZE), [query, type, levels, depts, sort]);
 
+  const sourceData = initialResources && initialResources.length > 0 ? initialResources : RESOURCES;
+
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const list = RESOURCES.filter(
+    const list = sourceData.filter(
       (r) =>
         r.type === type &&
         (!levels.length || levels.includes(r.level)) &&
-        (!depts.length || depts.includes(r.dept)) &&
+        (!depts.length || depts.includes(r.dept.toLowerCase())) &&
         (!q || `${r.code} ${r.title} ${deptName(r.dept)} ${r.detail}`.toLowerCase().includes(q))
     );
     return [...list].sort((a, b) =>
@@ -70,7 +72,7 @@ export default function AcademicHub() {
       : sort === "code" ? a.code.localeCompare(b.code)
       : a.title.localeCompare(b.title)
     );
-  }, [query, type, levels, depts, sort]);
+  }, [sourceData, query, type, levels, depts, sort]);
 
   const toggle = (list: string[], set: (v: string[]) => void, v: string) =>
     set(list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
@@ -239,6 +241,8 @@ function FilterPill({ label, onRemove }: { label: string; onRemove: () => void }
 }
 
 function ResourceRow({ r }: { r: Resource }) {
+  const isDownloadable = Boolean(r.available && r.href && r.href !== "#" && r.href.startsWith("http"));
+
   return (
     <li className="ah-row">
       <div className="ah-row__icon" aria-hidden="true">
@@ -249,13 +253,13 @@ function ResourceRow({ r }: { r: Resource }) {
           <b>{r.code}</b> · {r.level} · <span className="ah-tag">{typeLabel(r.type)}</span> · {r.detail}
         </p>
         <h3 className="ah-row__title">{r.title}</h3>
-        {!r.available && <p className="ah-row__warn">This file is being re-uploaded by the executives. Check back soon.</p>}
+        {!isDownloadable && <p className="ah-row__warn">This file is being uploaded by the executives. Check back soon.</p>}
       </div>
       <span className="ah-row__fmt">{r.format} · {r.size}</span>
-      {r.available ? (
-        <a href={r.href} className="ah-open">Open<span className="sr-only"> {r.title}</span></a>
+      {isDownloadable ? (
+        <a href={r.href} target="_blank" rel="noopener noreferrer" className="ah-open">Open PDF<span className="sr-only"> {r.title}</span></a>
       ) : (
-        <span className="ah-open ah-open--off">Unavailable</span>
+        <span className="ah-open ah-open--off" title="Pending executive upload">Pending upload</span>
       )}
     </li>
   );

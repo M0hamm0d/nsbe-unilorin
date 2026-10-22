@@ -3,6 +3,7 @@ import NoAccess from "@/components/admin/NoAccess";
 import Dashboard from "@/components/admin/Dashboard";
 
 export const metadata = { title: "Dashboard" };
+export const instant = false;
 
 export default async function Page() {
   const { allowed } = await guard("dashboard");

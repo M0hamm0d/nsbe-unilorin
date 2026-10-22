@@ -3,6 +3,7 @@ import NoAccess from "@/components/admin/NoAccess";
 import ProjectsManager from "@/components/admin/ProjectsManager";
 
 export const metadata = { title: "Final-year projects" };
+export const instant = false;
 
 export default async function Page() {
   const { allowed } = await guard("projects");
