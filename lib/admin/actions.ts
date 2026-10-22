@@ -23,6 +23,7 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 
 /** Fetch all join requests from Supabase (or fallback to mock data). */
 export async function getJoinRequests(): Promise<JoinRequest[]> {
+  await guard("joins");
   if (!isSupabaseConfigured()) return JOINS;
 
   try {
@@ -76,6 +77,7 @@ export async function updateJoinStatus(id: string, status: JoinStatus): Promise<
 
 /** Fetch all tutorial interests from Supabase (or fallback to mock data). */
 export async function getTutorialInterests(): Promise<TutorialInterest[]> {
+  await guard("tutorials");
   if (!isSupabaseConfigured()) return TUTORIALS;
 
   try {
@@ -133,6 +135,7 @@ export async function updateTutorialStatus(id: string, status: TutorialStatus): 
 
 /** Fetch academic resources for the admin panel. */
 export async function getAdminResources(): Promise<Resource[]> {
+  await guard("resources");
   if (!isSupabaseConfigured()) return RESOURCES;
 
   try {
@@ -171,6 +174,7 @@ export async function getAdminResources(): Promise<Resource[]> {
 
 /** Fetch a single academic resource by its ID for the editor. */
 export async function getAdminResourceById(id: string): Promise<Resource | null> {
+  await guard("resources");
   if (!isSupabaseConfigured()) {
     const found = RESOURCES.find((r) => r.id === id);
     return found ?? null;
@@ -329,6 +333,7 @@ export async function getPublicAcademicResources(): Promise<PublicResource[]> {
 
 /** Fetch a single event by ID for the admin editor. */
 export async function getAdminEventById(id: string): Promise<AdminEvent | null> {
+  await guard("events");
   if (!isSupabaseConfigured()) {
     const found = EVENTS.find((e) => e.id === id);
     return found ?? null;
@@ -368,6 +373,7 @@ export async function getAdminEventById(id: string): Promise<AdminEvent | null> 
 
 /** Fetch events for the admin panel. */
 export async function getAdminEvents(): Promise<AdminEvent[]> {
+  await guard("events");
   if (!isSupabaseConfigured()) return EVENTS;
 
   try {
@@ -525,6 +531,7 @@ export async function getPublicEvents(): Promise<ChapterEvent[]> {
 
 /** Fetch leadership team for the admin panel. */
 export async function getAdminLeaders(): Promise<import("./types").Leader[]> {
+  await guard("leadership");
   if (!isSupabaseConfigured()) {
     const { LEADERS } = await import("./mock-data");
     return LEADERS;
