@@ -116,6 +116,7 @@ export default function AboutPage() {
             <div className="ab-cta__actions">
               <Link href="/join" className="btn">Join the chapter</Link>
               <div className="ab-cta__links">
+                <Link href="/leadership" className="link">Meet Chapter Executives <span aria-hidden="true">↗</span></Link>
                 <Link href="/events" className="link">See upcoming events</Link>
                 <Link href="/academic-hub" className="link">Open the Academic Hub</Link>
               </div>
