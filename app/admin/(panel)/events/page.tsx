@@ -4,6 +4,7 @@ import EventsManager from "@/components/admin/EventsManager";
 import { getAdminEvents } from "@/lib/admin/actions";
 
 export const metadata = { title: "Events" };
+export const instant = false;
 
 export default async function Page() {
   const { allowed } = await guard("events");

@@ -4,6 +4,8 @@ import { requireSession } from "@/lib/admin/auth";
 import AdminProvider from "@/components/admin/AdminProvider";
 import AdminShell from "@/components/admin/AdminShell";
 
+export const instant = false;
+
 export default function PanelLayout({ children }: { children: ReactNode }) {
   return (
     <Suspense fallback={<p role="status">Loading admin…</p>}>

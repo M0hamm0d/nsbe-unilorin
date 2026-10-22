@@ -4,6 +4,7 @@ import JoinInbox from "@/components/admin/JoinInbox";
 import { getJoinRequests } from "@/lib/admin/actions";
 
 export const metadata = { title: "Join requests" };
+export const instant = false;
 
 export default async function Page() {
   const { allowed } = await guard("joins");

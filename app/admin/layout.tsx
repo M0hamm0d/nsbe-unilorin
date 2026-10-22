@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+export const instant = false;
+
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return <div className="adm-root">{children}</div>;
 }

@@ -4,6 +4,7 @@ import LeadershipManager from "@/components/admin/LeadershipManager";
 import { getAdminLeaders } from "@/lib/admin/actions";
 
 export const metadata = { title: "Leadership" };
+export const instant = false;
 
 export default async function Page() {
   const { allowed } = await guard("leadership");
