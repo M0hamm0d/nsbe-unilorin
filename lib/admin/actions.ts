@@ -146,23 +146,64 @@ export async function getAdminResources(): Promise<Resource[]> {
       return RESOURCES;
     }
 
-    return data.map((r) => ({
-      id: r.id,
-      code: r.code,
-      title: r.title,
-      dept: r.department,
-      level: r.level,
-      type: r.resource_type,
-      session: r.session,
-      notes: r.notes ?? undefined,
-      fileName: r.file_url ? r.file_url.split("/").pop() : undefined,
-      fileSize: r.file_size ?? "—",
-      status: r.status,
-      updatedAt: r.updated_at ? r.updated_at.slice(0, 10) : "",
-    }));
+    return data.map((r) => {
+      const hasRealFile = Boolean(r.file_url && r.file_url.startsWith("http"));
+      return {
+        id: r.id,
+        code: r.code,
+        title: r.title,
+        dept: r.department,
+        level: r.level,
+        type: r.resource_type,
+        session: r.session,
+        notes: r.notes ?? undefined,
+        fileName: hasRealFile ? r.file_url.split("/").pop() : undefined,
+        fileSize: r.file_size ?? "—",
+        status: r.status,
+        updatedAt: r.updated_at ? r.updated_at.slice(0, 10) : "",
+      };
+    });
   } catch (err) {
     console.error("getAdminResources error:", err);
     return RESOURCES;
+  }
+}
+
+/** Fetch a single academic resource by its ID for the editor. */
+export async function getAdminResourceById(id: string): Promise<Resource | null> {
+  if (!isSupabaseConfigured()) {
+    const found = RESOURCES.find((r) => r.id === id);
+    return found ?? null;
+  }
+
+  try {
+    const { data, error } = await supabaseAdmin()
+      .from("academic_resources")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (error || !data) return null;
+
+    const hasRealFile = Boolean(data.file_url && data.file_url.startsWith("http"));
+
+    return {
+      id: data.id,
+      code: data.code,
+      title: data.title,
+      dept: data.department,
+      level: data.level,
+      type: data.resource_type,
+      session: data.session,
+      notes: data.notes ?? undefined,
+      fileName: hasRealFile ? data.file_url.split("/").pop() : undefined,
+      fileSize: data.file_size ?? "—",
+      status: data.status,
+      updatedAt: data.updated_at ? data.updated_at.slice(0, 10) : "",
+    };
+  } catch (err) {
+    console.error("getAdminResourceById error:", err);
+    return null;
   }
 }
 
@@ -258,20 +299,23 @@ export async function getPublicAcademicResources(): Promise<PublicResource[]> {
       return mockResources;
     }
 
-    return data.map((r) => ({
-      id: r.id,
-      code: r.code,
-      title: r.title,
-      dept: r.department,
-      level: r.level,
-      type: r.resource_type,
-      detail: r.session || `${r.year} session`,
-      year: r.year,
-      format: r.format || "PDF",
-      size: r.file_size || "—",
-      available: r.available,
-      href: r.file_url || "#",
-    }));
+    return data.map((r) => {
+      const hasRealFile = Boolean(r.file_url && r.file_url.startsWith("http"));
+      return {
+        id: r.id,
+        code: r.code,
+        title: r.title,
+        dept: r.department,
+        level: r.level,
+        type: r.resource_type,
+        detail: r.session || `${r.year} session`,
+        year: r.year,
+        format: r.format || "PDF",
+        size: r.file_size || "—",
+        available: hasRealFile && r.available,
+        href: hasRealFile ? r.file_url : "#",
+      };
+    });
   } catch (err) {
     console.error("getPublicAcademicResources error:", err);
     const { RESOURCES: mockResources } = await import("@/lib/academic-resources");
@@ -282,6 +326,45 @@ export async function getPublicAcademicResources(): Promise<PublicResource[]> {
 // ==============================================================================
 // 3. CHAPTER EVENTS
 // ==============================================================================
+
+/** Fetch a single event by ID for the admin editor. */
+export async function getAdminEventById(id: string): Promise<AdminEvent | null> {
+  if (!isSupabaseConfigured()) {
+    const found = EVENTS.find((e) => e.id === id);
+    return found ?? null;
+  }
+
+  try {
+    const { data, error } = await supabaseAdmin()
+      .from("events")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (error || !data) return null;
+
+    return {
+      id: data.id,
+      title: data.title,
+      description: data.description || "",
+      date: data.date,
+      startTime: data.start_time || "",
+      endTime: data.end_time || undefined,
+      venue: data.venue || "",
+      organizer: data.organizer || "NSBE Unilorin",
+      image: data.image_url || undefined,
+      imageAlt: data.image_alt || undefined,
+      registrationUrl: data.registration_url || undefined,
+      registrationDeadline: data.registration_deadline || undefined,
+      status: data.status,
+      confirmed: data.confirmed,
+      updatedAt: data.updated_at ? data.updated_at.slice(0, 10) : "",
+    };
+  } catch (err) {
+    console.error("getAdminEventById error:", err);
+    return null;
+  }
+}
 
 /** Fetch events for the admin panel. */
 export async function getAdminEvents(): Promise<AdminEvent[]> {

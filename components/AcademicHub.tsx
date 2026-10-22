@@ -64,7 +64,7 @@ export default function AcademicHub({ initialResources }: { initialResources?: R
       (r) =>
         r.type === type &&
         (!levels.length || levels.includes(r.level)) &&
-        (!depts.length || depts.includes(r.dept)) &&
+        (!depts.length || depts.includes(r.dept.toLowerCase())) &&
         (!q || `${r.code} ${r.title} ${deptName(r.dept)} ${r.detail}`.toLowerCase().includes(q))
     );
     return [...list].sort((a, b) =>
@@ -241,6 +241,8 @@ function FilterPill({ label, onRemove }: { label: string; onRemove: () => void }
 }
 
 function ResourceRow({ r }: { r: Resource }) {
+  const isDownloadable = Boolean(r.available && r.href && r.href !== "#" && r.href.startsWith("http"));
+
   return (
     <li className="ah-row">
       <div className="ah-row__icon" aria-hidden="true">
@@ -251,13 +253,13 @@ function ResourceRow({ r }: { r: Resource }) {
           <b>{r.code}</b> · {r.level} · <span className="ah-tag">{typeLabel(r.type)}</span> · {r.detail}
         </p>
         <h3 className="ah-row__title">{r.title}</h3>
-        {!r.available && <p className="ah-row__warn">This file is being re-uploaded by the executives. Check back soon.</p>}
+        {!isDownloadable && <p className="ah-row__warn">This file is being uploaded by the executives. Check back soon.</p>}
       </div>
       <span className="ah-row__fmt">{r.format} · {r.size}</span>
-      {r.available ? (
-  <a href={r.href} target="_blank" rel="noopener noreferrer" className="ah-open">Open<span className="sr-only"> {r.title}</span></a>
-) : (
-        <span className="ah-open ah-open--off">Unavailable</span>
+      {isDownloadable ? (
+        <a href={r.href} target="_blank" rel="noopener noreferrer" className="ah-open">Open PDF<span className="sr-only"> {r.title}</span></a>
+      ) : (
+        <span className="ah-open ah-open--off" title="Pending executive upload">Pending upload</span>
       )}
     </li>
   );
