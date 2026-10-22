@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useMockCollection } from "@/lib/admin/use-mock";
 import { JOINS } from "@/lib/admin/mock-data";
 import type { JoinRequest, JoinStatus } from "@/lib/admin/types";
 import { DEPARTMENTS, LEVELS } from "@/lib/academic-resources";
 import { fmtDate } from "@/lib/admin/format";
+import { updateJoinStatus } from "@/lib/admin/actions";
 import { useAdmin } from "./AdminProvider";
 import { Badge, Banner, Card, Chips, EmptyState, FilterSelect, PageHeader, SearchBox, Tabs } from "./ui";
 
@@ -13,8 +13,8 @@ const LABEL: Record<JoinStatus, string> = { new: "New", in_progress: "In progres
 const KIND = { new: "new", in_progress: "warn", resolved: "done" } as const;
 const FROM = (l: string) => (Object.keys(LABEL) as JoinStatus[]).find((k) => LABEL[k] === l) as JoinStatus;
 
-export default function JoinInbox() {
-  const { items, update } = useMockCollection<JoinRequest>("joins", JOINS);
+export default function JoinInbox({ initialItems }: { initialItems?: JoinRequest[] }) {
+  const [items, setItems] = useState<JoinRequest[]>(initialItems ?? JOINS);
   const { toast, audit } = useAdmin();
   const [tab, setTab] = useState<JoinStatus>("new");
   const [q, setQ] = useState(""); const [dept, setDept] = useState(""); const [lvl, setLvl] = useState("");
@@ -23,6 +23,13 @@ export default function JoinInbox() {
   const count = (s: JoinStatus) => items.filter((t) => t.status === s).length;
   const rows = items.filter((t) => t.status === tab && (!dept || t.dept === dept) && (!lvl || t.level === lvl) && `${t.name} ${t.email}`.toLowerCase().includes(q.toLowerCase()));
   const cur = items.find((x) => x.id === sel) ?? null;
+
+  async function handleStatusChange(id: string, newStatus: JoinStatus, label: string) {
+    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, status: newStatus } : item)));
+    audit(`Marked a join request as ${label}`);
+    toast(`Marked as ${label}.`);
+    await updateJoinStatus(id, newStatus);
+  }
 
   return (
     <>
@@ -48,7 +55,7 @@ export default function JoinInbox() {
             <div className="adm-fg">
               <div><div className="adm-t" style={{ fontSize: 16 }}>{cur.name}</div><div className="adm-note">Submitted {fmtDate(cur.submittedAt)}</div></div>
               <dl className="adm-kv"><dt>Email</dt><dd>{cur.email}</dd><dt>Department</dt><dd>{cur.dept}</dd><dt>Level</dt><dd>{cur.level}</dd><dt>Phone</dt><dd>{cur.phone ?? "Not provided"}</dd><dt>Interested in</dt><dd>{cur.interests.join(", ") || "Not specified"}</dd></dl>
-              <Chips label="Status" options={Object.values(LABEL)} value={LABEL[cur.status]} onChange={(l) => { update(cur.id, { status: FROM(l) }); audit(`Marked a join request as ${l}`); toast(`Marked as ${l}.`); }} />
+              <Chips label="Status" options={Object.values(LABEL)} value={LABEL[cur.status]} onChange={(l) => handleStatusChange(cur.id, FROM(l), l)} />
             </div>
           </Card>)}
       </div>

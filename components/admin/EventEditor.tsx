@@ -7,6 +7,7 @@ import { useMockCollection } from "@/lib/admin/use-mock";
 import { EVENTS } from "@/lib/admin/mock-data";
 import type { AdminEvent } from "@/lib/admin/types";
 import { nowISO, uid } from "@/lib/admin/format";
+import { saveAdminEvent, deleteAdminEvent } from "@/lib/admin/actions";
 import { useAdmin } from "./AdminProvider";
 import { AreaField, Banner, Card, Check, ConfirmDialog, EmptyState, ImageDrop, PageHeader, StatusBadge, TextField } from "./ui";
 import { EventPreview } from "./EventsManager";
@@ -55,13 +56,17 @@ export default function EventEditor() {
   const set = <K extends keyof AdminEvent>(k: K, v: AdminEvent[K]) => setF({ ...f, [k]: v });
   const saved = items.some((x) => x.id === f.id);
 
-  function save(next: AdminEvent, msg: string) {
+  async function save(next: AdminEvent, msg: string) {
     const rec = { ...next, updatedAt: nowISO().slice(0, 10) };
     if (saved) update(rec.id, rec); else add(rec);
     setF(rec);
     audit(`${msg} ${rec.title || "an event"}`);
     toast(msg === "Published" ? "Published. It now appears on the public Events page." : "Saved.");
-    if (!saved) router.replace(`/admin/events/${rec.id}`);
+    const res = await saveAdminEvent(rec);
+    if (!saved && res?.id) {
+      update(rec.id, { ...rec, id: res.id });
+      router.replace(`/admin/events/${res.id}`);
+    }
   }
   function saveDraft() {
     if (!f!.title.trim()) { setShow(true); return toast("Add a title to save this event.", "bad"); }
@@ -127,8 +132,8 @@ export default function EventEditor() {
       </div>
       {f.status === "published" && <Banner kind="info">This event is live. Saving changes updates the public Events page.</Banner>}
       <ConfirmDialog open={del} danger title={`Delete “${f.title}”?`} confirmLabel="Delete permanently" onCancel={() => setDel(false)}
-        extra={<button className="adm-btn2" onClick={() => { update(f.id, { status: "archived" }); audit(`Archived ${f.title}`); router.push("/admin/events"); }}>Archive instead</button>}
-        onConfirm={() => { remove(f.id); audit(`Deleted event ${f.title}`); toast("Event deleted."); router.push("/admin/events"); }}>
+        extra={<button className="adm-btn2" onClick={async () => { const next = { ...f, status: "archived" as const }; update(f.id, next); audit(`Archived ${f.title}`); await saveAdminEvent(next); router.push("/admin/events"); }}>Archive instead</button>}
+        onConfirm={async () => { remove(f.id); audit(`Deleted event ${f.title}`); toast("Event deleted."); await deleteAdminEvent(f.id); router.push("/admin/events"); }}>
         This permanently removes the event from the admin and the public Events page. It cannot be undone. Archive it instead to keep a record.
       </ConfirmDialog>
     </>

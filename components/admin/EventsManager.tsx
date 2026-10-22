@@ -6,6 +6,7 @@ import { useMockCollection } from "@/lib/admin/use-mock";
 import { EVENTS } from "@/lib/admin/mock-data";
 import type { AdminEvent } from "@/lib/admin/types";
 import { fmtDate, fmtTime, isPast, nowISO } from "@/lib/admin/format";
+import { saveAdminEvent, deleteAdminEvent } from "@/lib/admin/actions";
 import { useAdmin } from "./AdminProvider";
 import { Badge, ConfirmDialog, Dialog, EmptyState, FilterSelect, PageHeader, SearchBox, StatusBadge, Tabs } from "./ui";
 import Icon from "./Icon";
@@ -30,8 +31,11 @@ export function EventPreview({ e }: { e: AdminEvent }) {
   );
 }
 
-export default function EventsManager() {
-  const { items, update, remove, ready } = useMockCollection<AdminEvent>("events", EVENTS);
+export default function EventsManager({ initialItems }: { initialItems?: AdminEvent[] } = {}) {
+  const { items, update, remove, ready } = useMockCollection<AdminEvent>(
+    "events",
+    initialItems && initialItems.length > 0 ? initialItems : EVENTS
+  );
   const { toast, audit } = useAdmin();
   const [tab, setTab] = useState<Tab>("published");
   const [q, setQ] = useState(""); const [org, setOrg] = useState(""); const [reg, setReg] = useState("");
@@ -50,10 +54,12 @@ export default function EventsManager() {
     `${e.title} ${e.venue} ${e.organizer}`.toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => (tab === "past" ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date)));
 
-  function setStatus(e: AdminEvent, status: AdminEvent["status"], msg: string) {
-    update(e.id, { status, updatedAt: nowISO().slice(0, 10) });
+  async function setStatus(e: AdminEvent, status: AdminEvent["status"], msg: string) {
+    const next = { ...e, status, updatedAt: nowISO().slice(0, 10) };
+    update(e.id, next);
     audit(`${msg} ${e.title}`);
     toast(`${msg} “${e.title}”.`);
+    await saveAdminEvent(next);
   }
 
   return (
@@ -102,7 +108,7 @@ export default function EventsManager() {
       </Dialog>
       <ConfirmDialog open={!!del} danger title={`Delete “${del?.title ?? ""}”?`} confirmLabel="Delete permanently" onCancel={() => setDel(null)}
         extra={del && del.status !== "archived" ? <button className="adm-btn2" onClick={() => { setStatus(del, "archived", "Archived"); setDel(null); }}>Archive instead</button> : null}
-        onConfirm={() => { if (!del) return; remove(del.id); audit(`Deleted event ${del.title}`); toast(`Deleted “${del.title}”.`); setDel(null); }}>
+        onConfirm={async () => { if (!del) return; const target = del; remove(target.id); audit(`Deleted event ${target.title}`); toast(`Deleted “${target.title}”.`); setDel(null); await deleteAdminEvent(target.id); }}>
         This permanently removes the event from the admin and the public Events page. It cannot be undone. Archive it instead to keep a record.
       </ConfirmDialog>
     </>

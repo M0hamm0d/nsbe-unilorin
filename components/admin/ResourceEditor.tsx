@@ -8,6 +8,7 @@ import { RESOURCES } from "@/lib/admin/mock-data";
 import type { Resource } from "@/lib/admin/types";
 import { DEPARTMENTS, LEVELS, RESOURCE_TYPES } from "@/lib/academic-resources";
 import { nowISO, uid } from "@/lib/admin/format";
+import { saveAdminResource } from "@/lib/admin/actions";
 import { useAdmin } from "./AdminProvider";
 import { AreaField, Banner, Card, Check, Chips, EmptyState, FieldError, PageHeader, SelectField, StatusBadge, TextField } from "./ui";
 import { findDuplicate, typeLabel } from "./ResourcesManager";
@@ -27,6 +28,7 @@ export default function ResourceEditor() {
   const [up, setUp] = useState<Upload | null>(null);
   const [show, setShow] = useState(false);
   const [allowDup, setAllowDup] = useState(false);
+  const [uploadedUrl, setUploadedUrl] = useState<string>("");
   const timer = useRef<ReturnType<typeof setInterval>>(undefined);
   const input = useRef<HTMLInputElement>(null);
   const existing = items.find((x) => x.id === id);
@@ -50,31 +52,50 @@ export default function ResourceEditor() {
   const saved = items.some((x) => x.id === f.id);
   const S = <K extends keyof Resource>(k: K, v: Resource[K]) => setF({ ...f, [k]: v });
 
-  function pick(file?: File) {
+  async function pick(file?: File) {
     if (!file) return;
     clearInterval(timer.current);
     if (file.type !== "application/pdf") return setUp({ name: file.name, size: file.size, progress: 0, error: "Only PDF files are accepted." });
     if (file.size > MAX_MB * 1024 * 1024) return setUp({ name: file.name, size: file.size, progress: 0, error: `This file is ${(file.size / 1048576).toFixed(0)} MB. Files must be ${MAX_MB} MB or smaller. Compress it or choose another file.` });
-    let p = 0;
-    setUp({ name: file.name, size: file.size, progress: 0 });
-    // Mock upload: simulates progress. Replace with a Supabase Storage upload later.
-    timer.current = setInterval(() => {
-      p += 12 + Math.random() * 10;
-      if (p >= 100) {
-        clearInterval(timer.current);
+
+    setUp({ name: file.name, size: file.size, progress: 20 });
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("dept", f?.dept || "general");
+    formData.append("level", f?.level || "all");
+
+    try {
+      const res = await fetch("/api/admin/resources/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.ok) {
         setUp({ name: file.name, size: file.size, progress: 100 });
-        setF((cur) => cur && { ...cur, fileName: file.name, fileSize: `${(file.size / 1048576).toFixed(1)} MB` });
+        setF((cur) => cur && { ...cur, fileName: data.fileName, fileSize: data.fileSize });
+        setUploadedUrl(data.url);
         toast("File uploaded.");
-      } else setUp({ name: file.name, size: file.size, progress: Math.round(p) });
-    }, 220);
+      } else {
+        setUp({ name: file.name, size: file.size, progress: 0, error: data.error || "Upload failed." });
+      }
+    } catch {
+      setUp({ name: file.name, size: file.size, progress: 0, error: "Upload failed." });
+    }
   }
 
-  function save(status: Resource["status"], msg: string) {
+  async function save(status: Resource["status"], msg: string) {
     const rec = { ...f!, status, updatedAt: nowISO().slice(0, 10) };
     if (saved) update(rec.id, rec); else add(rec);
     setF(rec); audit(`${msg} ${rec.code} ${rec.title}`.trim());
     toast(status === "published" ? "Published. Students can now open it in the Academic Hub." : "Saved.");
-    if (!saved) router.replace(`/admin/resources/${rec.id}`);
+    const res = await saveAdminResource(rec, uploadedUrl || undefined);
+    if (!saved && res?.id) {
+      update(rec.id, { ...rec, id: res.id });
+      router.replace(`/admin/resources/${res.id}`);
+    } else if (!saved) {
+      router.replace(`/admin/resources/${rec.id}`);
+    }
   }
   const uploading = !!up && !up.error && up.progress < 100;
   const list: [string, boolean][] = [["File uploaded", !errs.file], ["Department, level and type chosen", !errs.dept && !errs.level], ["Course code and title", !errs.code && !errs.title], ["Session added", !errs.session], ["No unconfirmed duplicate", !errs.dup]];

@@ -7,6 +7,7 @@ import { RESOURCES } from "@/lib/admin/mock-data";
 import type { PubStatus, Resource } from "@/lib/admin/types";
 import { DEPARTMENTS, LEVELS, RESOURCE_TYPES } from "@/lib/academic-resources";
 import { fmtDate, nowISO } from "@/lib/admin/format";
+import { saveAdminResource } from "@/lib/admin/actions";
 import { useAdmin } from "./AdminProvider";
 import { Badge, EmptyState, FilterSelect, PageHeader, SearchBox, StatusBadge, Tabs } from "./ui";
 import Icon from "./Icon";
@@ -17,8 +18,11 @@ export const typeLabel = (v: string) => RESOURCE_TYPES.find((t) => t.value === v
 export const findDuplicate = (r: Pick<Resource, "id" | "code" | "type" | "session">, all: Resource[]) =>
   all.find((x) => x.id !== r.id && x.status !== "archived" && x.code.replace(/\s/g, "").toLowerCase() === r.code.replace(/\s/g, "").toLowerCase() && x.type === r.type && x.session === r.session);
 
-export default function ResourcesManager() {
-  const { items, update } = useMockCollection<Resource>("resources", RESOURCES);
+export default function ResourcesManager({ initialItems }: { initialItems?: Resource[] } = {}) {
+  const { items, update } = useMockCollection<Resource>(
+    "resources",
+    initialItems && initialItems.length > 0 ? initialItems : RESOURCES
+  );
   const { toast, audit } = useAdmin();
   const [tab, setTab] = useState<PubStatus>("published");
   const [q, setQ] = useState(""); const [dept, setDept] = useState(""); const [lvl, setLvl] = useState(""); const [type, setType] = useState(""); const [ses, setSes] = useState("");
@@ -30,10 +34,12 @@ export default function ResourcesManager() {
   const dupes = rows.filter((r) => findDuplicate(r, items)).length;
   const count = (s: PubStatus) => items.filter((r) => r.status === s).length;
 
-  function setStatus(r: Resource, status: PubStatus, msg: string) {
+  async function setStatus(r: Resource, status: PubStatus, msg: string) {
     if (status === "published" && !r.fileName) return toast("Upload a file before publishing.", "bad");
-    update(r.id, { status, updatedAt: nowISO().slice(0, 10) });
+    const next = { ...r, status, updatedAt: nowISO().slice(0, 10) };
+    update(r.id, next);
     audit(`${msg} ${r.code} ${r.title}`); toast(`${msg} ${r.code}.`);
+    await saveAdminResource(next);
   }
 
   return (

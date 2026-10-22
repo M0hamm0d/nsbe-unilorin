@@ -17,7 +17,7 @@ type Sort = "newest" | "code" | "title";
 const typeLabel = (t: ResourceType) => RESOURCE_TYPES.find((x) => x.value === t)!.label;
 const deptName = (slug: string) => DEPARTMENTS.find((d) => d.slug === slug)?.name ?? slug;
 
-export default function AcademicHub() {
+export default function AcademicHub({ initialResources }: { initialResources?: Resource[] }) {
   const [query, setQuery] = useState("");
   const [type, setType] = useState<ResourceType>("past-question");
   const [levels, setLevels] = useState<string[]>([]);
@@ -56,9 +56,11 @@ export default function AcademicHub() {
   // Reset pagination whenever the filters change
   useEffect(() => setVisible(PAGE_SIZE), [query, type, levels, depts, sort]);
 
+  const sourceData = initialResources && initialResources.length > 0 ? initialResources : RESOURCES;
+
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const list = RESOURCES.filter(
+    const list = sourceData.filter(
       (r) =>
         r.type === type &&
         (!levels.length || levels.includes(r.level)) &&
@@ -70,7 +72,7 @@ export default function AcademicHub() {
       : sort === "code" ? a.code.localeCompare(b.code)
       : a.title.localeCompare(b.title)
     );
-  }, [query, type, levels, depts, sort]);
+  }, [sourceData, query, type, levels, depts, sort]);
 
   const toggle = (list: string[], set: (v: string[]) => void, v: string) =>
     set(list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
@@ -253,8 +255,8 @@ function ResourceRow({ r }: { r: Resource }) {
       </div>
       <span className="ah-row__fmt">{r.format} · {r.size}</span>
       {r.available ? (
-        <a href={r.href} className="ah-open">Open<span className="sr-only"> {r.title}</span></a>
-      ) : (
+  <a href={r.href} target="_blank" rel="noopener noreferrer" className="ah-open">Open<span className="sr-only"> {r.title}</span></a>
+) : (
         <span className="ah-open ah-open--off">Unavailable</span>
       )}
     </li>
