@@ -6,10 +6,25 @@ import type { Leader } from "@/lib/admin/types";
 import { uid } from "@/lib/admin/format";
 import { saveAdminLeader, deleteAdminLeader } from "@/lib/admin/actions";
 import { useAdmin } from "./AdminProvider";
-import { AreaField, Banner, Card, ConfirmDialog, ImageDrop, PageHeader, Switch, TextField } from "./ui";
+import { Banner, Card, ConfirmDialog, ImageDrop, PageHeader, Switch, TextField } from "./ui";
 import Icon from "./Icon";
 
-const MAX_BIO = 280;
+function parseSocials(raw?: string): { linkedin: string; twitter: string; email: string } {
+  if (!raw) return { linkedin: "", twitter: "", email: "" };
+  try {
+    if (raw.trim().startsWith("{")) {
+      const parsed = JSON.parse(raw);
+      return {
+        linkedin: parsed.linkedin || "",
+        twitter: parsed.twitter || "",
+        email: parsed.email || "",
+      };
+    }
+  } catch {}
+  if (raw.includes("linkedin.com")) return { linkedin: raw.trim(), twitter: "", email: "" };
+  if (raw.includes("@")) return { linkedin: "", twitter: "", email: raw.trim() };
+  return { linkedin: "", twitter: "", email: "" };
+}
 
 export default function LeadershipManager({ initialItems }: { initialItems?: Leader[] }) {
   const [items, setItems] = useState<Leader[]>(initialItems && initialItems.length > 0 ? initialItems : LEADERS);
@@ -53,10 +68,16 @@ export default function LeadershipManager({ initialItems }: { initialItems?: Lea
     ? {
         name: !f.name.trim() ? "Enter the full name." : "",
         role: !f.role.trim() ? "Enter the approved role or title." : "",
-        bio: f.bio.length > MAX_BIO ? `Keep the biography under ${MAX_BIO} characters.` : "",
-        term: f.termStart && f.termEnd && f.termEnd < f.termStart ? "The term can’t end before it starts." : "",
       }
     : null;
+
+  const currentSocials = parseSocials(f?.bio);
+
+  function updateSocial(key: "linkedin" | "twitter" | "email", val: string) {
+    if (!f) return;
+    const nextSocials = { ...currentSocials, [key]: val.trim() };
+    setF({ ...f, bio: JSON.stringify(nextSocials) });
+  }
 
   async function save() {
     if (!f || !errs || saving) return;
@@ -104,7 +125,7 @@ export default function LeadershipManager({ initialItems }: { initialItems?: Lea
 
   return (
     <>
-      <PageHeader title="Leadership" sub="Manage current executives and their public profiles.">
+      <PageHeader title="Leadership" sub="Manage chapter executives, portraits, and social links.">
         <button
           className="adm-btn"
           onClick={() => {
@@ -116,7 +137,7 @@ export default function LeadershipManager({ initialItems }: { initialItems?: Lea
         </button>
       </PageHeader>
       <Banner kind="warn">
-        <b>Use verified information only.</b> Names, roles, portraits and term dates must be confirmed by the chapter. Never copy them from design reference screenshots.
+        <b>Use verified information only.</b> Names, roles, portraits and socials must be confirmed by chapter executives.
       </Banner>
       <div className="adm-grid adm-main-side-n">
         <div className="adm-leaders">
@@ -138,9 +159,6 @@ export default function LeadershipManager({ initialItems }: { initialItems?: Lea
               <div style={{ margin: "10px 0" }}>
                 <div className="adm-t">{l.name}</div>
                 <div className="adm-m">{l.role}</div>
-                <div className="adm-m">
-                  {l.termStart || l.termEnd ? `${l.termStart || "?"} to ${l.termEnd || "present"}` : "Term not set"}
-                </div>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                 <Switch label="Public" checked={l.visible} onChange={(v) => toggleVisible(l, v)} />
@@ -181,46 +199,44 @@ export default function LeadershipManager({ initialItems }: { initialItems?: Lea
             <div className="adm-fg">
               <TextField
                 label="Full name"
+                placeholder="e.g. Olumide Ogunjimi"
                 value={f.name}
                 onChange={(e) => setF({ ...f, name: e.target.value })}
                 error={show ? errs.name : ""}
               />
               <TextField
                 label="Approved role or title"
+                placeholder="e.g. Chapter President"
                 value={f.role}
                 onChange={(e) => setF({ ...f, role: e.target.value })}
                 error={show ? errs.role : ""}
               />
               <ImageDrop
-                label="Portrait"
+                label="Executive Portrait Photo"
                 value={f.portrait}
                 onChange={(n) => setF({ ...f, portrait: n })}
-                hint="Square crop, approved photo only."
-              />
-              <AreaField
-                label="Short biography"
-                help={`Up to ${MAX_BIO} characters · ${f.bio.length} used`}
-                value={f.bio}
-                onChange={(e) => setF({ ...f, bio: e.target.value })}
-                error={show ? errs.bio : ""}
+                hint="Portrait or square crop photo."
               />
               <div className="adm-r2">
                 <TextField
-                  label="Term starts"
-                  optional
-                  type="date"
-                  value={f.termStart ?? ""}
-                  onChange={(e) => setF({ ...f, termStart: e.target.value })}
+                  label="LinkedIn profile (optional)"
+                  placeholder="https://linkedin.com/in/username"
+                  value={currentSocials.linkedin}
+                  onChange={(e) => updateSocial("linkedin", e.target.value)}
                 />
                 <TextField
-                  label="Term ends"
-                  optional
-                  type="date"
-                  value={f.termEnd ?? ""}
-                  onChange={(e) => setF({ ...f, termEnd: e.target.value })}
-                  error={show ? errs.term : ""}
+                  label="X / Twitter (optional)"
+                  placeholder="https://x.com/username"
+                  value={currentSocials.twitter}
+                  onChange={(e) => updateSocial("twitter", e.target.value)}
                 />
               </div>
+              <TextField
+                label="Contact email (optional)"
+                placeholder="name@example.com"
+                value={currentSocials.email}
+                onChange={(e) => updateSocial("email", e.target.value)}
+              />
               <Switch
                 label="Show on the public Leadership page"
                 checked={f.visible}
