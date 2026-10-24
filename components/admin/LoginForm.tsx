@@ -47,6 +47,12 @@ export default function LoginForm({ showDemo }: { showDemo: boolean }) {
         {error && <FieldError text={error} />}
       </div>
       <button className="adm-btn adm-wide" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
+      <div style={{ textAlign: "center", marginTop: 8, fontSize: "0.875rem", color: "var(--muted)" }}>
+        New chapter executive?{" "}
+        <a href="/admin/signup" style={{ color: "var(--gt)", fontWeight: 600, textDecoration: "underline" }}>
+          Request access
+        </a>
+      </div>
       {/* {showDemo && (
         <div className="adm-demo">
           <b>Demo accounts</b> (password <code>nsbe-demo</code> unless you set ADMIN_DEMO_PASSWORD)

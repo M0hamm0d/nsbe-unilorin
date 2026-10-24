@@ -39,7 +39,19 @@ export function Banner({ kind = "info", children }: { kind?: "info" | "warn" | "
   return <div className={`adm-banner adm-banner--${kind}`}><Icon name={kind === "info" ? "shield" : "warn"} /><div>{children}</div></div>;
 }
 
-export const Card = ({ children, className = "" }: { children: ReactNode; className?: string }) => <section className={`adm-card ${className}`}>{children}</section>;
+export const Card = ({
+  children,
+  className = "",
+  style,
+}: {
+  children: ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}) => (
+  <section className={`adm-card ${className}`} style={style}>
+    {children}
+  </section>
+);
 export const CardHead = ({ title, children }: { title: string; children?: ReactNode }) => <div className="adm-chd"><h2>{title}</h2>{children}</div>;
 
 export function Switch({ checked, onChange, label, disabled }: { checked: boolean; onChange: (v: boolean) => void; label: string; disabled?: boolean }) {
