@@ -414,6 +414,7 @@ export async function getAdminEvents(): Promise<AdminEvent[]> {
 export async function saveAdminEvent(event: AdminEvent): Promise<{ ok: boolean; id?: string }> {
   await guard("events");
 
+  console.log("isSupabaseConfigured", isSupabaseConfigured());
   if (!isSupabaseConfigured()) return { ok: true, id: event.id };
 
   try {
@@ -491,6 +492,7 @@ export async function deleteAdminEvent(id: string): Promise<{ ok: boolean }> {
 export async function getPublicEvents(): Promise<ChapterEvent[]> {
   if (!isSupabaseConfigured()) {
     const { EVENTS: mockEvents } = await import("@/lib/events");
+    console.log('no supabase configured', mockEvents)
     return mockEvents;
   }
 
@@ -505,6 +507,8 @@ export async function getPublicEvents(): Promise<ChapterEvent[]> {
       const { EVENTS: mockEvents } = await import("@/lib/events");
       return mockEvents;
     }
+
+    console.log('supabase configured', data)
 
     return data.map((e) => ({
       id: e.id,
