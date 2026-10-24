@@ -3,15 +3,18 @@
 import { revalidatePath } from "next/cache";
 import { isSupabaseConfigured, supabaseAdmin } from "@/lib/supabase-admin";
 import { guard } from "@/lib/admin/auth";
+import { hashPassword } from "@/lib/admin/password";
 import type {
   AdminEvent,
+  AdminUser,
   JoinRequest,
   JoinStatus,
   Resource,
+  Role,
   TutorialInterest,
   TutorialStatus,
 } from "./types";
-import { EVENTS, JOINS, RESOURCES, TUTORIALS } from "./mock-data";
+import { EVENTS, JOINS, RESOURCES, TUTORIALS, USERS } from "./mock-data";
 import { type Resource as PublicResource } from "@/lib/academic-resources";
 import { type ChapterEvent } from "@/lib/events";
 
@@ -673,4 +676,219 @@ export async function getPublicLeaders(): Promise<import("./types").Leader[]> {
     return LEADERS.filter((l) => l.visible);
   }
 }
+
+// ==============================================================================
+// 5. ADMIN USERS & AUTHORIZATION
+// ==============================================================================
+
+/** Fetch all registered admin users from Supabase for Access & Roles page. */
+export async function getAdminUsers(): Promise<AdminUser[]> {
+  await guard("access");
+
+  if (!isSupabaseConfigured()) {
+    return USERS;
+  }
+
+  try {
+    const { data, error } = await supabaseAdmin()
+      .from("admin_users")
+      .select("id, name, email, role, status, last_active, created_at")
+      .order("created_at", { ascending: false });
+
+    if (error || !data || data.length === 0) {
+      return USERS;
+    }
+
+    return data.map((u) => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      role: (u.role as Role) || "editor",
+      status: (u.status as "active" | "invited" | "revoked") || "invited",
+      lastActive: u.last_active || "—",
+    }));
+  } catch (err) {
+    console.error("getAdminUsers error:", err);
+    return USERS;
+  }
+}
+
+/** Register a new admin user account (submitted from /admin/signup or invite). */
+export async function registerAdminUser(payload: {
+  name: string;
+  email: string;
+  password?: string;
+  role?: Role;
+}): Promise<{ ok: boolean; error?: string }> {
+  const name = payload.name.trim();
+  const email = payload.email.trim().toLowerCase();
+  const role = payload.role || "editor";
+  const password = payload.password?.trim() || "";
+
+  if (name.length < 2) return { ok: false, error: "Please enter your full name." };
+  if (!email.includes("@")) return { ok: false, error: "Please enter a valid email address." };
+  if (password && password.length < 6) {
+    return { ok: false, error: "Password must be at least 6 characters long." };
+  }
+
+  if (!isSupabaseConfigured()) {
+    revalidatePath("/admin/access");
+    return { ok: true };
+  }
+
+  try {
+    // Check if user already exists
+    const { data: existing } = await supabaseAdmin()
+      .from("admin_users")
+      .select("id, email, status")
+      .eq("email", email)
+      .maybeSingle();
+
+    if (existing) {
+      if (existing.status === "invited") {
+        return { ok: false, error: "An account request with this email is already pending administrator approval." };
+      }
+      return { ok: false, error: "An account with this email address already exists." };
+    }
+
+    const passwordHash = password ? hashPassword(password) : hashPassword(process.env.ADMIN_DEMO_PASSWORD ?? "nsbe-demo");
+
+    const { error: insertError } = await supabaseAdmin().from("admin_users").insert({
+      name,
+      email,
+      role,
+      password_hash: passwordHash,
+      status: "invited",
+      last_active: "—",
+    });
+
+    if (insertError) {
+      console.error("Failed to insert admin_user:", insertError);
+      return { ok: false, error: "Database error while registering account." };
+    }
+
+    revalidatePath("/admin/access");
+    return { ok: true };
+  } catch (err) {
+    console.error("registerAdminUser error:", err);
+    return { ok: false, error: "Failed to register account. Please try again." };
+  }
+}
+
+/** Approve a pending/invited admin user and activate their dashboard access. */
+export async function approveAdminUser(id: string, role?: Role): Promise<{ ok: boolean }> {
+  await guard("access");
+
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const updatePayload: Record<string, unknown> = {
+      status: "active",
+      updated_at: new Date().toISOString(),
+    };
+    if (role) updatePayload.role = role;
+
+    const { error } = await supabaseAdmin()
+      .from("admin_users")
+      .update(updatePayload)
+      .eq("id", id);
+
+    if (error) throw error;
+
+    revalidatePath("/admin/access");
+    return { ok: true };
+  } catch (err) {
+    console.error("approveAdminUser error:", err);
+    return { ok: false };
+  }
+}
+
+/** Change an admin user's assigned role. */
+export async function updateAdminUserRole(id: string, role: Role): Promise<{ ok: boolean }> {
+  await guard("access");
+
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabaseAdmin()
+      .from("admin_users")
+      .update({ role, updated_at: new Date().toISOString() })
+      .eq("id", id);
+
+    if (error) throw error;
+
+    revalidatePath("/admin/access");
+    return { ok: true };
+  } catch (err) {
+    console.error("updateAdminUserRole error:", err);
+    return { ok: false };
+  }
+}
+
+/** Revoke access for an active admin user. */
+export async function revokeAdminUser(id: string): Promise<{ ok: boolean }> {
+  await guard("access");
+
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabaseAdmin()
+      .from("admin_users")
+      .update({ status: "revoked", updated_at: new Date().toISOString() })
+      .eq("id", id);
+
+    if (error) throw error;
+
+    revalidatePath("/admin/access");
+    return { ok: true };
+  } catch (err) {
+    console.error("revokeAdminUser error:", err);
+    return { ok: false };
+  }
+}
+
+/** Restore access for a revoked admin user. */
+export async function restoreAdminUser(id: string): Promise<{ ok: boolean }> {
+  await guard("access");
+
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabaseAdmin()
+      .from("admin_users")
+      .update({ status: "active", updated_at: new Date().toISOString() })
+      .eq("id", id);
+
+    if (error) throw error;
+
+    revalidatePath("/admin/access");
+    return { ok: true };
+  } catch (err) {
+    console.error("restoreAdminUser error:", err);
+    return { ok: false };
+  }
+}
+
+/** Delete or reject an admin user request. */
+export async function deleteAdminUser(id: string): Promise<{ ok: boolean }> {
+  await guard("access");
+
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabaseAdmin()
+      .from("admin_users")
+      .delete()
+      .eq("id", id);
+
+    if (error) throw error;
+
+    revalidatePath("/admin/access");
+    return { ok: true };
+  } catch (err) {
+    console.error("deleteAdminUser error:", err);
+    return { ok: false };
+  }
+}
+
 
