@@ -22,7 +22,7 @@ async function LoginContent() {
       <div className="adm-login__card">
         <div className="adm-brand adm-brand--dark"><Image src="/nsbe-logo.png" width={34} height={34} alt="NSBE Unilorin" /><div>NSBE Unilorin<small>Admin</small></div></div>
         <h1>Sign in to the admin</h1>
-        <p>For authorized chapter executives only. There is no public sign-up.</p>
+        <p>For chapter executives. New officers can request access below.</p>
         <LoginForm showDemo={process.env.NODE_ENV !== "production"} />
       </div>
     </main>

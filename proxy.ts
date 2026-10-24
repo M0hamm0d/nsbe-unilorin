@@ -3,7 +3,7 @@ import { SESSION_COOKIE, verifySession } from "@/lib/admin/session";
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  if (pathname === "/admin/login") return NextResponse.next();
+  if (pathname === "/admin/login" || pathname === "/admin/signup") return NextResponse.next();
 
   const session = await verifySession(req.cookies.get(SESSION_COOKIE)?.value);
   if (session) return NextResponse.next();
