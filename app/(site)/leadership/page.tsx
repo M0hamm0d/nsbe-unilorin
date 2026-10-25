@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { connection } from "next/server";
 import { getPublicLeaders } from "@/lib/admin/actions";
+import type { Leader } from "@/lib/admin/types";
 import "./leadership.css";
 
 export const metadata: Metadata = {
@@ -74,110 +75,111 @@ function EmailIcon() {
 export default async function LeadershipPage() {
   await connection();
   const leaders = await getPublicLeaders();
+  const president = leaders[0];
+  const executives = leaders.slice(1);
+  const presidentImageSrc = normalizeImageSrc(president?.portrait);
 
   return (
     <div className="ld-page">
-      {/* Intro Header */}
       <section className="ld-intro">
         <div className="container ld-intro__grid">
           <div>
             <p className="eyebrow">Chapter Leadership</p>
             <h1 className="ld-title">Executive Committee</h1>
           </div>
-          <div>
-            <p className="ld-lead">
-              Meet the student engineers directing academic excellence, leadership development, and technical innovation across the University of Ilorin.
-            </p>
-          </div>
+          <p className="ld-lead">
+            Meet the student engineers directing academic excellence, leadership development, and technical innovation across the University of Ilorin.
+          </p>
         </div>
       </section>
 
-      {/* Leadership Grid */}
-      <div className="container">
-        {leaders.length > 0 ? (
-          <div className="ld-grid">
-            {leaders.map((leader) => {
-              const imageSrc = normalizeImageSrc(leader.portrait);
-              const socials = parseSocials(leader.bio);
-              const hasSocials = Boolean(socials.linkedin || socials.twitter || socials.email);
-
-              return (
-                <article key={leader.id} className="ld-card">
-                  <div className="ld-image-wrap">
-                    {imageSrc ? (
-                      <Image
-                        src={imageSrc}
-                        alt={leader.name}
-                        fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 220px"
-                        className="ld-photo"
-                        unoptimized
-                      />
-                    ) : (
-                      <div className="ld-placeholder">
-                        <span>{getInitials(leader.name)}</span>
-                      </div>
-                    )}
+      <div className="container ld-content">
+        {president ? (
+          <section className="ld-featured" aria-labelledby="ld-president-heading">
+            <article className="ld-president">
+              <div className="ld-president__image">
+                {presidentImageSrc ? (
+                  <Image
+                    src={presidentImageSrc}
+                    alt={president.name}
+                    fill
+                    sizes="(max-width: 760px) 100vw, 42vw"
+                    className="ld-photo"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="ld-placeholder" aria-hidden="true">
+                    <span>{getInitials(president.name)}</span>
                   </div>
-                  <div className="ld-content">
-                    <h2 className="ld-name">{leader.name}</h2>
-                    <span className="ld-role">{leader.role}</span>
-                    {hasSocials && (
-                      <div className="ld-socials">
-                        {socials.linkedin && (
-                          <a
-                            href={socials.linkedin.startsWith("http") ? socials.linkedin : `https://${socials.linkedin}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="ld-social-link"
-                            aria-label={`${leader.name} on LinkedIn`}
-                            title="LinkedIn"
-                          >
-                            <LinkedInIcon />
-                          </a>
-                        )}
-                        {socials.twitter && (
-                          <a
-                            href={socials.twitter.startsWith("http") ? socials.twitter : `https://${socials.twitter}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="ld-social-link"
-                            aria-label={`${leader.name} on X / Twitter`}
-                            title="X (Twitter)"
-                          >
-                            <TwitterIcon />
-                          </a>
-                        )}
-                        {socials.email && (
-                          <a
-                            href={socials.email.startsWith("mailto:") ? socials.email : `mailto:${socials.email}`}
-                            className="ld-social-link"
-                            aria-label={`Email ${leader.name}`}
-                            title="Email"
-                          >
-                            <EmailIcon />
-                          </a>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
+                )}
+              </div>
+              <div className="ld-president__details">
+                <p className="ld-president__role">{president.role}</p>
+                <h2 id="ld-president-heading" className="ld-president__name">{president.name}</h2>
+                {president.bio && !president.bio.trim().startsWith("{") && !president.bio.includes("linkedin.com") && !president.bio.includes("@") && (
+                  <p className="ld-president__bio">{president.bio}</p>
+                )}
+                {president.termStart && president.termEnd && (
+                  <p className="ld-president__term">Term {president.termStart}–{president.termEnd}</p>
+                )}
+                <LeaderSocials leader={president} />
+              </div>
+            </article>
+          </section>
         ) : (
-          <p className="adm-note" style={{ padding: "48px 0", textAlign: "center" }}>
+          <p className="ld-empty">
             Leadership details are currently being updated by the chapter executives.
           </p>
         )}
 
-        {/* Join Leadership CTA */}
+        {executives.length > 0 && (
+          <section className="ld-executives" aria-labelledby="ld-executives-heading">
+            <div className="ld-executives__heading">
+              <p className="ld-section-label">Chapter leadership</p>
+              <h2 id="ld-executives-heading">Executive team</h2>
+            </div>
+            <div className="ld-grid" role="list" aria-label="Other executive members">
+              {executives.map((leader) => {
+                const imageSrc = normalizeImageSrc(leader.portrait);
+                return (
+                  <article key={leader.id} className="ld-card" role="listitem">
+                    <div className="ld-card__image">
+                      {imageSrc ? (
+                        <Image
+                          src={imageSrc}
+                          alt={leader.name}
+                          fill
+                          sizes="(max-width: 640px) 96px, (max-width: 1024px) 45vw, 28vw"
+                          className="ld-photo"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="ld-placeholder" aria-hidden="true">
+                          <span>{getInitials(leader.name)}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="ld-card__content">
+                      <p className="ld-card__role">{leader.role}</p>
+                      <h3 className="ld-card__name">{leader.name}</h3>
+                      {leader.termStart && leader.termEnd && (
+                        <p className="ld-card__term">Term {leader.termStart}–{leader.termEnd}</p>
+                      )}
+                      <LeaderSocials leader={leader} />
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
         <div className="ld-cta">
           <div>
-            <h3 style={{ fontSize: "1.25rem", fontWeight: 700, marginBottom: "4px" }}>
+            <h2>
               Want to take on a leadership role?
-            </h3>
-            <p style={{ color: "var(--muted)", fontSize: "0.9375rem" }}>
+            </h2>
+            <p>
               Active members can join chapter committees, coordinate peer tutorials, or run for executive positions.
             </p>
           </div>
@@ -186,6 +188,50 @@ export default async function LeadershipPage() {
           </Link>
         </div>
       </div>
+    </div>
+  );
+}
+
+function LeaderSocials({ leader }: { leader: Leader }) {
+  const socials = parseSocials(leader.bio);
+  if (!socials.linkedin && !socials.twitter && !socials.email) return null;
+
+  return (
+    <div className="ld-socials" aria-label={`${leader.name} contact links`}>
+      {socials.linkedin && (
+        <a
+          href={socials.linkedin.startsWith("http") ? socials.linkedin : `https://${socials.linkedin}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ld-social-link"
+          aria-label={`${leader.name} on LinkedIn`}
+          title="LinkedIn"
+        >
+          <LinkedInIcon />
+        </a>
+      )}
+      {socials.twitter && (
+        <a
+          href={socials.twitter.startsWith("http") ? socials.twitter : `https://${socials.twitter}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ld-social-link"
+          aria-label={`${leader.name} on X / Twitter`}
+          title="X (Twitter)"
+        >
+          <TwitterIcon />
+        </a>
+      )}
+      {socials.email && (
+        <a
+          href={socials.email.startsWith("mailto:") ? socials.email : `mailto:${socials.email}`}
+          className="ld-social-link"
+          aria-label={`Email ${leader.name}`}
+          title="Email"
+        >
+          <EmailIcon />
+        </a>
+      )}
     </div>
   );
 }
