@@ -44,14 +44,18 @@
 }
 
 /* Interlocking Rotational Animation */
+.cs-gear {
+  transform-box: fill-box;
+  transform-origin: center;
+  display: block;
+}
+
 .cs-gear--primary {
-  transform-origin: 120px 150px;
-  animation: csSpinCw 24s linear infinite;
+  animation: csSpinCw 20s linear infinite;
 }
 
 .cs-gear--secondary {
-  transform-origin: 205px 82px;
-  animation: csSpinCcw 18s linear infinite;
+  animation: csSpinCcw 16s linear infinite;
 }
 
 @keyframes csSpinCw {

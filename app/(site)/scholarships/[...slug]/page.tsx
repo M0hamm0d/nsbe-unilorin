@@ -42,7 +42,7 @@ export default async function ScholarshipDetailPage({ params }: Props) {
     <main>
       <ComingSoon
         title="COMING SOON!"
-        subtitle={`${name.toUpperCase()} IS UNDER CONSTRUCTION.`}
+        subtitle="THIS PAGE IS UNDER CONSTRUCTION."
         description={desc}
         backHref="/programs#scholarships"
         backLabel="Back to Scholarships"
