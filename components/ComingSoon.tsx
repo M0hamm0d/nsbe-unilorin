@@ -31,54 +31,58 @@ export default function ComingSoon({
             focusable="false"
           >
             {/* Ground Shadow */}
-            <ellipse cx="150" cy="246" rx="95" ry="12" fill="var(--border)" opacity="0.85" />
+            <ellipse cx="150" cy="246" rx="90" ry="12" fill="var(--border)" opacity="0.85" />
 
             {/* Secondary Gear (Smaller, NSBE Card Green #166a31) */}
-            <g className="cs-gear cs-gear--secondary">
-              <path
-                d="M 239.0 82.0 L 255.6 93.9 L 251.6 105.1 L 230.7 104.2 L 225.6 109.1 L 222.0 111.4 L 220.0 131.8 L 208.3 133.9 L 198.6 115.4 L 191.8 113.3 L 188.0 111.4 L 169.4 119.9 L 161.7 110.8 L 172.9 93.2 L 171.3 86.3 L 171.0 82.0 L 154.4 70.1 L 158.4 58.9 L 179.3 59.8 L 184.4 54.9 L 188.0 52.6 L 190.0 32.2 L 201.7 30.1 L 211.4 48.6 L 218.2 50.7 L 222.0 52.6 L 240.6 44.1 L 248.3 53.2 L 237.1 70.8 L 238.7 77.7 Z"
-                fill="var(--card-green)"
-                stroke="var(--near-black)"
-                strokeWidth="5"
-                strokeLinejoin="round"
-              />
-              {/* Inner Hole */}
-              <circle
-                cx="205"
-                cy="82"
-                r="16"
-                fill="var(--white)"
-                stroke="var(--near-black)"
-                strokeWidth="5"
-              />
+            <g transform="translate(198, 86)">
+              <g className="cs-gear cs-gear--secondary">
+                <path
+                  d="M 40.4 9.9 L 49.8 21.8 L 44.9 30.8 L 29.7 29.1 L 24.3 33.8 L 21.6 35.6 L 19.8 50.7 L 10.0 53.5 L 0.5 41.6 L -6.7 41.1 L -9.9 40.4 L -21.8 49.8 L -30.8 44.9 L -29.1 29.7 L -33.8 24.3 L -35.6 21.6 L -50.7 19.8 L -53.5 10.0 L -41.6 0.5 L -41.1 -6.7 L -40.4 -9.9 L -49.8 -21.8 L -44.9 -30.8 L -29.7 -29.1 L -24.3 -33.8 L -21.6 -35.6 L -19.8 -50.7 L -10.0 -53.5 L -0.5 -41.6 L 6.7 -41.1 L 9.9 -40.4 L 21.8 -49.8 L 30.8 -44.9 L 29.1 -29.7 L 33.8 -24.3 L 35.6 -21.6 L 50.7 -19.8 L 53.5 -10.0 L 41.6 -0.5 L 41.1 6.7 Z"
+                  fill="var(--card-green)"
+                  stroke="var(--near-black)"
+                  strokeWidth="5"
+                  strokeLinejoin="round"
+                />
+                {/* Inner Hole */}
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="16"
+                  fill="var(--white)"
+                  stroke="var(--near-black)"
+                  strokeWidth="5"
+                />
+              </g>
             </g>
 
             {/* Primary Gear (Larger, NSBE Vibrant Green #2ab456) */}
-            <g className="cs-gear cs-gear--primary">
-              <path
-                d="M 172.0 150.0 L 193.9 162.9 L 190.6 175.4 L 164.8 176.5 L 160.1 183.1 L 156.8 186.8 L 163.1 211.4 L 151.9 217.9 L 132.9 200.4 L 124.9 201.8 L 120.0 202.0 L 107.1 223.9 L 94.6 220.6 L 93.5 194.8 L 86.9 190.1 L 83.2 186.8 L 58.6 193.1 L 52.1 181.9 L 69.6 162.9 L 68.2 154.9 L 68.0 150.0 L 46.1 137.1 L 49.4 124.6 L 75.2 123.5 L 79.9 116.9 L 83.2 113.2 L 76.9 88.6 L 88.1 82.1 L 107.1 99.6 L 115.1 98.2 L 120.0 98.0 L 132.9 76.1 L 145.4 79.4 L 146.5 105.2 L 153.1 109.9 L 156.8 113.2 L 181.4 106.9 L 187.9 118.1 L 170.4 137.1 L 171.8 145.1 Z"
-                fill="var(--green)"
-                stroke="var(--near-black)"
-                strokeWidth="5.5"
-                strokeLinejoin="round"
-              />
-              {/* Inner Hole */}
-              <circle
-                cx="120"
-                cy="150"
-                r="24"
-                fill="var(--white)"
-                stroke="var(--near-black)"
-                strokeWidth="5.5"
-              />
-              {/* Crescent Highlight Reflection */}
-              <path
-                d="M 103 138 A 20 20 0 0 1 133 134"
-                fill="none"
-                stroke="var(--pale)"
-                strokeWidth="4"
-                strokeLinecap="round"
-              />
+            <g transform="translate(115, 155)">
+              <g className="cs-gear cs-gear--primary">
+                <path
+                  d="M 51.4 -7.8 L 68.0 -0.8 L 67.3 9.4 L 50.0 14.2 L 47.6 21.0 L 46.2 23.9 L 55.5 39.3 L 48.9 47.2 L 32.1 40.9 L 26.2 44.9 L 23.3 46.5 L 21.8 64.4 L 11.8 67.0 L 1.9 52.0 L -5.3 51.7 L -8.5 51.3 L -20.3 64.9 L -29.8 61.1 L -29.0 43.2 L -34.7 38.8 L -37.0 36.5 L -54.5 40.6 L -60.0 32.0 L -48.8 17.9 L -50.8 11.0 L -51.4 7.8 L -68.0 0.8 L -67.3 -9.4 L -50.0 -14.2 L -47.6 -21.0 L -46.2 -23.9 L -55.5 -39.3 L -48.9 -47.2 L -32.1 -40.9 L -26.2 -44.9 L -23.3 -46.5 L -21.8 -64.4 L -11.8 -67.0 L -1.9 -52.0 L 5.3 -51.7 L 8.5 -51.3 L 20.3 -64.9 L 29.8 -61.1 L 29.0 -43.2 L 34.7 -38.8 L 37.0 -36.5 L 54.5 -40.6 L 60.0 -32.0 L 48.8 -17.9 L 50.8 -11.0 Z"
+                  fill="var(--green)"
+                  stroke="var(--near-black)"
+                  strokeWidth="5.5"
+                  strokeLinejoin="round"
+                />
+                {/* Inner Hole */}
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="24"
+                  fill="var(--white)"
+                  stroke="var(--near-black)"
+                  strokeWidth="5.5"
+                />
+                {/* Crescent Highlight Reflection */}
+                <path
+                  d="M -16 -12 A 20 20 0 0 1 14 -16"
+                  fill="none"
+                  stroke="var(--pale)"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                />
+              </g>
             </g>
           </svg>
         </div>

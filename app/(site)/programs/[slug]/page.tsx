@@ -31,7 +31,7 @@ export default async function ProgramDetailPage({ params }: Props) {
     <main>
       <ComingSoon
         title="COMING SOON!"
-        subtitle={`${name.toUpperCase()} IS UNDER CONSTRUCTION.`}
+        subtitle="THIS PAGE IS UNDER CONSTRUCTION."
         description={desc}
         backHref="/programs#programs"
         backLabel="Back to Programs"
