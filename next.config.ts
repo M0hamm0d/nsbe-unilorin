@@ -1,3 +1,4 @@
+
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -7,6 +8,17 @@ const nextConfig: NextConfig = {
   },
   cacheComponents: true,
   partialPrefetching: true,
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lflouuloifyuzewzymoi.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
+  },
+
   turbopack: {
     rules: {
       "*.css": {
