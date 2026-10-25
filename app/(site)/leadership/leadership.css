@@ -1,228 +1,385 @@
-/* ===== Chapter Leadership (strictly conforms to NSBE Unilorin design tokens) ===== */
-
 .ld-page {
+  --ld-green: #2ab456;
+  --ld-green-dark: #208a42;
+  --ld-green-light: #eaf8ee;
+
+  --ld-ink: #171b24;
+  --ld-muted: #5f6876;
+  --ld-page: #f7f7f4;
+  --ld-surface: #ffffff;
+  --ld-border: #e0e4ea;
+  --ld-gold: #9a7a2e;
+
+  background: var(--ld-page);
+  color: var(--ld-ink);
   padding-bottom: 80px;
 }
 
-/* Header */
+
 .ld-intro {
-  padding: 40px 0 28px;
+  padding: 48px 0 36px;
 }
 
 .ld-intro__grid {
   display: grid;
-  gap: 24px;
   align-items: end;
+  gap: 24px;
 }
 
-@media (min-width: 900px) {
-  .ld-intro {
-    padding: 64px 0 40px;
-  }
-  .ld-intro__grid {
-    grid-template-columns: 1.1fr 1fr;
-    gap: 64px;
-  }
+.ld-intro .eyebrow {
+  color: var(--ld-green-dark);
 }
 
 .ld-title {
-  font-family: var(--font-serif), Georgia, serif;
-  font-size: clamp(38px, 6.5vw, 56px);
-  color: var(--ink);
-  line-height: 1.1;
+  max-width: 12ch;
   margin-top: 8px;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(40px, 6vw, 68px);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
 }
 
 .ld-lead {
+  max-width: 42ch;
+  color: var(--ld-muted);
   font-size: 16px;
-  line-height: 1.6;
-  color: var(--muted);
+  line-height: 1.65;
 }
 
-@media (min-width: 900px) {
-  .ld-lead {
-    font-size: 17px;
-  }
+.ld-content {
+  padding-bottom: 8px;
 }
 
-/* Executive Cards Grid (Optimized for high-density directory: 15-30+ cards) */
-.ld-grid {
+.ld-section-label {
+  margin: 0;
+  color: var(--ld-green-dark);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.ld-featured {
+  border-top: 1px solid var(--ld-border);
+  padding-top: 20px;
+}
+
+.ld-president {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  margin-top: 36px;
+  background: var(--ld-surface);
+  border: 1px solid var(--ld-border);
+  border-bottom: 2px solid var(--ld-gold);
 }
 
-@media (max-width: 640px) {
-  .ld-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-top: 24px;
-  }
-}
-
-.ld-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.ld-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(9, 27, 16, 0.08);
-  border-color: var(--green);
-}
-
-/* Photo Wrap */
-.ld-image-wrap {
+.ld-president__image,
+.ld-card__image {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background: var(--tint);
   overflow: hidden;
+  background: #e9edf2;
+}
+
+.ld-president__image {
+  min-height: 260px;
+  aspect-ratio: 4 / 3;
 }
 
 .ld-photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
-  transition: transform 0.3s ease;
-}
-
-.ld-card:hover .ld-photo {
-  transform: scale(1.04);
+  object-position: center 30%;
 }
 
 .ld-placeholder {
+  display: flex;
   width: 100%;
   height: 100%;
-  display: flex;
+  min-height: inherit;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--deep) 0%, var(--card-green) 100%);
-  color: var(--pale);
+  background: #e9edf2;
+  color: var(--ld-green-dark);
   font-family: var(--font-serif), Georgia, serif;
-  font-size: 1.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-size: 2rem;
 }
 
-/* Card Content */
-.ld-content {
-  padding: 12px 14px 14px;
+.ld-president__details {
   display: flex;
+  min-width: 0;
   flex-direction: column;
-  flex-grow: 1;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 24px 30px;
 }
 
-@media (max-width: 640px) {
-  .ld-content {
-    padding: 10px 10px 12px;
-  }
-}
-
-.ld-name {
-  font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1rem;
+.ld-president__role {
+  margin: 0 0 12px;
+  color: var(--ld-green-dark);
+  font-size: 12px;
   font-weight: 700;
-  color: var(--ink);
-  margin: 0 0 3px;
-  line-height: 1.25;
-}
-
-@media (max-width: 640px) {
-  .ld-name {
-    font-size: 0.9rem;
-  }
-}
-
-.ld-role {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--green-text);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
   text-transform: uppercase;
-  line-height: 1.3;
 }
 
-@media (max-width: 640px) {
-  .ld-role {
-    font-size: 0.68rem;
-  }
+.ld-president__name {
+  max-width: 14ch;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(34px, 5vw, 54px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
 }
 
-/* Socials */
+.ld-president__bio {
+  max-width: 48ch;
+  margin-top: 18px;
+  color: var(--ld-muted);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.ld-president__term,
+.ld-card__term {
+  margin: 16px 0 0;
+  color: var(--ld-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .ld-socials {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: auto;
-  padding-top: 8px;
-  border-top: 1px solid var(--border);
+  gap: 8px;
+  margin-top: 22px;
 }
 
 .ld-social-link {
   display: inline-flex;
+  width: 40px;
+  height: 40px;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  border: 1px solid var(--ld-border);
   border-radius: 50%;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  color: var(--muted);
-  transition: all 0.15s ease;
+  background: var(--ld-surface);
+  color: var(--ld-green-dark);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .ld-social-link:hover {
-  color: var(--green-text);
-  border-color: var(--green);
-  background: var(--tint);
-  transform: translateY(-2px);
+  border-color: var(--ld-green);
+  background: #f0f3f8;
 }
 
-/* Get Involved Banner */
-.ld-cta {
-  margin-top: 64px;
-  background: var(--deep);
-  color: var(--white);
-  border-radius: var(--radius);
-  padding: 40px;
+.ld-executives {
+  margin-top: 56px;
+}
+
+.ld-executives__heading {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 24px;
+  gap: 8px;
+  border-bottom: 1px solid var(--ld-border);
+  padding-bottom: 18px;
 }
 
-.ld-cta h3 {
-  color: var(--white);
-  font-size: clamp(24px, 3.5vw, 32px);
+.ld-executives__heading h2 {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(28px, 3.4vw, 38px);
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.ld-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.ld-card {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 104px minmax(0, 1fr);
+  background: var(--ld-surface);
+  border: 1px solid var(--ld-border);
+}
+
+.ld-card__image {
+  min-height: 148px;
+}
+
+.ld-card__content {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px;
+}
+
+.ld-card__role {
+  margin: 0 0 7px;
+  color: var(--ld-green-dark);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.ld-card__name {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(20px, 2.3vw, 25px);
+  font-weight: 400;
+  line-height: 1.17;
+  overflow-wrap: anywhere;
+}
+
+.ld-card .ld-socials {
+  margin-top: 14px;
+}
+
+.ld-card .ld-social-link {
+  width: 36px;
+  height: 36px;
+}
+
+.ld-empty {
+  border-top: 1px solid var(--ld-border);
+  padding: 40px 0;
+  color: var(--ld-muted);
+  text-align: center;
+}
+
+.ld-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  margin-top: 64px;
+  border-top: 1px solid var(--ld-border);
+  padding-top: 28px;
+}
+
+.ld-cta h2 {
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.2;
 }
 
 .ld-cta p {
-  color: var(--on-dark);
+  max-width: 58ch;
+  margin-top: 8px;
+  color: var(--ld-muted);
+  font-size: 15px;
 }
 
 .ld-cta .btn {
-  background: var(--green);
-  color: var(--on-green);
+  background: var(--ld-green);
+  color: #fff;
 }
 
 .ld-cta .btn:hover {
-  background: var(--green-hover);
+  background: var(--ld-green-dark);
+}
+
+@media (min-width: 640px) {
+  .ld-intro {
+    padding-top: 60px;
+  }
+
+  .ld-president {
+    grid-template-columns: minmax(240px, 0.85fr) minmax(0, 1.15fr);
+  }
+
+  .ld-president__image {
+    min-height: 400px;
+    aspect-ratio: auto;
+  }
+
+  .ld-president__details {
+    padding: 36px;
+  }
+
+  .ld-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
 }
 
 @media (min-width: 900px) {
+  .ld-intro {
+    padding: 72px 0 48px;
+  }
+
+  .ld-intro__grid {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 64px;
+  }
+
+  .ld-lead {
+    font-size: 17px;
+  }
+
+  .ld-president {
+    grid-template-columns: minmax(320px, 0.82fr) minmax(0, 1.18fr);
+  }
+
+  .ld-president__image {
+    min-height: 480px;
+  }
+
+  .ld-president__details {
+    padding: 48px clamp(40px, 7vw, 88px);
+  }
+
+  .ld-executives {
+    margin-top: 72px;
+  }
+
+  .ld-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .ld-card {
+    grid-template-columns: 1fr;
+  }
+
+  .ld-card__image {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+
+  .ld-card__content {
+    min-height: 160px;
+    padding: 20px;
+  }
+
+  .ld-card__name {
+    font-size: 24px;
+  }
+
   .ld-cta {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 48px 56px;
+    gap: 32px;
+    margin-top: 80px;
+    padding-top: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ld-page *,
+  .ld-page *::before,
+  .ld-page *::after {
+    transition-duration: 0.01ms !important;
   }
 }
