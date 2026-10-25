@@ -81,7 +81,15 @@ export default async function EventsPage() {
                   </div>
                 </div>
                 <div className="ev-next__media">
-                  <Image src={next.image} alt={`Event flyer for ${next.name}`} width={600} height={400} priority />
+                  {next.image && (
+                    <Image
+                      src={next.image}
+                      alt={`Event flyer for ${next.name}`}
+                      width={600}
+                      height={400}
+                      priority
+                    />
+                  )}
                   <span className="ev-next__media-caption">NSBE Unilorin · {dateParts(next.date).month} {dateParts(next.date).day}</span>
                 </div>
               </article>
