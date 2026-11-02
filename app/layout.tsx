@@ -1,22 +1,5 @@
 import type { Metadata } from "next";
-import { Source_Serif_4, Manrope } from "next/font/google";
 import "./globals.css";
-
-const serif = Source_Serif_4({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-serif",
-  display: "swap",
-  fallback: ["Georgia", "serif"],
-});
-
-const sans = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-sans",
-  display: "swap",
-  fallback: ["system-ui", "sans-serif"],
-});
 
 export const metadata: Metadata = {
   title: "NSBE Unilorin",
@@ -26,7 +9,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable}`} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body>{children}</body>
     </html>
   );

@@ -80,7 +80,7 @@ export const AUDIT: AuditEntry[] = [
 ];
 
 export const SETTINGS: SiteSettings[] = [{
-  id: "site", email: "hello@nsbeunilorin.org", phone: "", office: "",
+  id: "site", email: "nsbeunilorinchapter@gmail.com", phone: "", office: "",
   footerText: "University of Ilorin chapter of the National Society of Black Engineers.",
   socials: [
     { platform: "Instagram", url: "https://www.instagram.com/nsbe.unilorin", show: true },

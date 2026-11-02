@@ -55,7 +55,7 @@ export default function SiteFooter() {
             <h3>Contact</h3>
             <ul className="site-footer__nav">
               <li>
-                <a href="mailto:hello@nsbeunilorin.org">hello@nsbeunilorin.org</a>
+                <a href="mailto:nsbeunilorinchapter@gmail.com">nsbeunilorinchapter@gmail.com</a>
               </li>
               <li>
                 <a href="https://www.instagram.com/nsbe.unilorin" target="_blank" rel="noopener noreferrer">Instagram</a> ·{" "}

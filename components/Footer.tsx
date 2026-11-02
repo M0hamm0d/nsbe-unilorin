@@ -19,7 +19,7 @@ export default function Footer() {
         </div>
         <div>
           <strong>Contact</strong>
-          <a href="mailto:hello@nsbeunilorin.org">hello@nsbeunilorin.org</a>
+          <a href="mailto:nsbeunilorinchapter@gmail.com">nsbeunilorinchapter@gmail.com</a>
           <p className="inline">
             <a href="https://www.instagram.com/nsbe.unilorin" target="_blank" rel="noopener noreferrer">Instagram</a> ·{" "}
             <a href="https://x.com/NSBE_UNILORIN1" target="_blank" rel="noopener noreferrer">X</a> ·{" "}
