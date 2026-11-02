@@ -55,10 +55,12 @@ export default function SiteFooter() {
             <h3>Contact</h3>
             <ul className="site-footer__nav">
               <li>
-                <span className="pending">Email — pending verification</span>
+                <a href="mailto:hello@nsbeunilorin.org">hello@nsbeunilorin.org</a>
               </li>
               <li>
-                <span className="pending">Social links — pending verification</span>
+                <a href="https://www.instagram.com/nsbe.unilorin" target="_blank" rel="noopener noreferrer">Instagram</a> ·{" "}
+                <a href="https://x.com/NSBE_UNILORIN1" target="_blank" rel="noopener noreferrer">X</a> ·{" "}
+                <a href="https://www.linkedin.com/company/nsbe-unilorin-chapter/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
               </li>
             </ul>
           </div>
