@@ -78,7 +78,7 @@ export default async function ExecutiveMarquee({ initialLeaders }: ExecutiveMarq
         </Link>
       </div>
 
-      <div className="exec-marquee" tabIndex={0} role="region" aria-label="Executives marquee ticker">
+      <div className="exec-marquee" role="region" aria-label="Executives marquee ticker">
         <div className="exec-marquee__fade exec-marquee__fade--left" aria-hidden="true" />
         <div className="exec-marquee__fade exec-marquee__fade--right" aria-hidden="true" />
 
