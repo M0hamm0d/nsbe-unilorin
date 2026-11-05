@@ -23,12 +23,12 @@ export const PROGRAMS: Program[] = [
 ];
 
 export const LEADERS: Leader[] = [
-  { id: "ld1", name: "Ifeoluwa Abdulsamad", role: "Chapter President", bio: "Leading the chapter’s strategic vision, institutional partnerships, and member development.", termStart: "2025", termEnd: "2026", visible: true, order: 1 },
-  { id: "ld2", name: "Amina Yusuf", role: "Vice President", bio: "Coordinating internal chapter operations, committee deliverables, and chapter administration.", termStart: "2025", termEnd: "2026", visible: true, order: 2 },
-  { id: "ld3", name: "Tunde Bello", role: "Academic Excellence Chair", bio: "Directing the Academic Hub library, past question collection drives, and peer tutoring sessions.", termStart: "2025", termEnd: "2026", visible: true, order: 3 },
-  { id: "ld4", name: "Chiamaka Obi", role: "General Secretary", bio: "Managing chapter documentation, communications, records, and executive correspondence.", termStart: "2025", termEnd: "2026", visible: true, order: 4 },
-  { id: "ld5", name: "Ibrahim Musa", role: "Technical Director", bio: "Leading hands-on engineering workshops, the Build Lab initiative, and student project mentorship.", termStart: "2025", termEnd: "2026", visible: true, order: 5 },
-  { id: "ld6", name: "Fatima Aliyu", role: "Programs & Events Chair", bio: "Overseeing industrial tours, engineering career fairs, guest speaker series, and chapter outreach.", termStart: "2025", termEnd: "2026", visible: true, order: 6 },
+  { id: "ld1", name: "Ifeoluwa Abdulsamad", role: "Chapter President", bio: "Leading the chapter’s strategic vision, institutional partnerships, and member development.", visible: true, order: 1 },
+  { id: "ld2", name: "Amina Yusuf", role: "Vice President", bio: "Coordinating internal chapter operations, committee deliverables, and chapter administration.", visible: true, order: 2 },
+  { id: "ld3", name: "Tunde Bello", role: "Academic Excellence Chair", bio: "Directing the Academic Hub library, past question collection drives, and peer tutoring sessions.", visible: true, order: 3 },
+  { id: "ld4", name: "Chiamaka Obi", role: "General Secretary", bio: "Managing chapter documentation, communications, records, and executive correspondence.", visible: true, order: 4 },
+  { id: "ld5", name: "Ibrahim Musa", role: "Technical Director", bio: "Leading hands-on engineering workshops, the Build Lab initiative, and student project mentorship.", visible: true, order: 5 },
+  { id: "ld6", name: "Fatima Aliyu", role: "Programs & Events Chair", bio: "Overseeing industrial tours, engineering career fairs, guest speaker series, and chapter outreach.", visible: true, order: 6 },
 ];
 
 export const RESOURCES: Resource[] = [
