@@ -63,10 +63,10 @@ export const JOINS: JoinRequest[] = [
 ];
 
 export const SPONSORS: Sponsor[] = [
-  { id: "sp1", name: "[Partner name 1]", description: "Short description of the partnership.", website: "https://partner1.example", order: 1, confirmed: true, visible: true },
-  { id: "sp2", name: "[Partner name 2]", description: "Short description of the partnership.", website: "https://partner2.example", order: 2, confirmed: true, visible: true },
-  { id: "sp3", name: "[Partner name 3]", description: "Awaiting written permission to show the logo.", website: "https://partner3.example", order: 3, confirmed: false, visible: false },
-  { id: "sp4", name: "[Possible sponsor]", description: "Conversation only. Not confirmed.", order: 4, confirmed: false, visible: false },
+  { id: "sp1", name: "Siemens", description: "Global technology powerhouse in engineering and electrification.", logo: "/partners/siemens.svg", order: 1, confirmed: true, visible: true },
+  { id: "sp2", name: "Bosch", description: "Leading global supplier of technology and engineering services.", logo: "/partners/bosch.svg", order: 2, confirmed: true, visible: true },
+  { id: "sp3", name: "Schneider Electric", description: "Leader in the digital transformation of energy management and automation.", logo: "/partners/schneider-electric.svg", order: 3, confirmed: true, visible: true },
+  { id: "sp4", name: "Intel", description: "Innovator in semiconductor design and high-performance computing.", logo: "/partners/intel.svg", order: 4, confirmed: true, visible: true },
 ];
 
 export const USERS: AdminUser[] = DEMO_USERS;

@@ -3,6 +3,7 @@ import Link from "next/link";
 import AcademicHubPreview from "@/components/AcademicHubPreview";
 import Image from "next/image";
 import ExecutiveMarquee from "@/components/ExecutiveMarquee";
+import { getPublicSponsors } from "@/lib/admin/actions";
 
 export const instant = false;
 
@@ -25,14 +26,8 @@ const programs = [
   { cls: "pcard--3", img: "/lab-nsbe.jpg", category: "Technical", name: "Build Lab", text: "Hands-on workshops where members design and build real engineering projects together." },
 ];
 
-const partners = [
-  { name: "Siemens", src: "/partners/siemens.svg" },
-  { name: "Bosch", src: "/partners/bosch.svg" },
-  { name: "Schneider Electric", src: "/partners/schneider-electric.svg" },
-  { name: "Intel", src: "/partners/intel.svg" },
-];
-
-export default function Home() {
+export default async function Home() {
+  const sponsors = await getPublicSponsors();
   return (
     <div className="home-page">
       {/* Hero */}
@@ -173,19 +168,47 @@ export default function Home() {
       </section>
 
       {/* Sponsors */}
-      <section className="section sponsors">
-        <div className="container">
-          <p className="eyebrow home-reveal">Sponsors &amp; partners</p>
-          <h2 className="h2 sponsors__title">Organisations that support the chapter.</h2>
-          <div className="sponsors__grid home-reveal">
-            {partners.map((p) => (
-              <div className="sponsor" key={p.name}>
-                <Image src={p.src} alt={p.name} width={200} height={100} />
-              </div>
-            ))}
+      {sponsors.length > 0 && (
+        <section className="section sponsors">
+          <div className="container">
+            <p className="eyebrow home-reveal">Sponsors &amp; partners</p>
+            <h2 className="h2 sponsors__title">Organisations that support the chapter.</h2>
+            <div className="sponsors__grid home-reveal">
+              {sponsors.map((p) => {
+                const logoSrc = p.logo || "/partners/siemens.svg";
+                return (
+                  <div className="sponsor" key={p.id}>
+                    {p.website ? (
+                      <a
+                        href={p.website.startsWith("http") ? p.website : `https://${p.website}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={p.name}
+                      >
+                        <Image
+                          src={logoSrc}
+                          alt={p.name}
+                          width={200}
+                          height={100}
+                          unoptimized={logoSrc.startsWith("http") || logoSrc.endsWith(".svg")}
+                        />
+                      </a>
+                    ) : (
+                      <Image
+                        src={logoSrc}
+                        alt={p.name}
+                        width={200}
+                        height={100}
+                        unoptimized={logoSrc.startsWith("http") || logoSrc.endsWith(".svg")}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }
