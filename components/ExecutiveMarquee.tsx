@@ -71,7 +71,7 @@ export default async function ExecutiveMarquee({ initialLeaders }: ExecutiveMarq
       <div className="container exec-marquee-header">
         <div className="exec-marquee-header__title">
           <span className="eyebrow">Chapter Leadership</span>
-          <p className="exec-marquee-header__sub">Meet  Unilorin chapter Executives</p>
+          <p className="exec-marquee-header__sub">Meet the Unilorin Chapter Executives</p>
         </div>
         <Link href="/leadership" className="exec-marquee-header__link">
           View all executives <span aria-hidden="true">→</span>
