@@ -1,6 +1,10 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import AcademicHubPreview from "@/components/AcademicHubPreview";
 import Image from "next/image";
+import ExecutiveMarquee from "@/components/ExecutiveMarquee";
+
+export const instant = false;
 
 const quickLinks = [
   { href: "/academic-hub", title: "Academic Hub", text: "Past questions and materials by department and level." },
@@ -67,6 +71,11 @@ export default function Home() {
           </nav>
         </div>
       </section>
+
+      {/* Chapter Executives Spotlight Marquee */}
+      <Suspense fallback={null}>
+        <ExecutiveMarquee />
+      </Suspense>
 
       {/* About */}
       <section className="section about">

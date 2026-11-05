@@ -1,0 +1,230 @@
+/* ===== Executive Marquee Styles ===== */
+
+.exec-marquee-section {
+  padding: 48px 0 32px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  position: relative;
+}
+
+.exec-marquee-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.exec-marquee-header__title .eyebrow {
+  margin-bottom: 4px;
+  color: var(--green-text);
+}
+
+.exec-marquee-header__sub {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(20px, 2.8vw, 28px);
+  color: var(--ink);
+  line-height: 1.2;
+  margin: 0;
+  font-weight: 500;
+}
+
+.exec-marquee-header__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green-text);
+  white-space: nowrap;
+  transition: color 150ms ease, transform 150ms ease;
+  padding: 6px 0;
+}
+
+.exec-marquee-header__link:hover {
+  color: var(--green-hover);
+  transform: translateX(2px);
+}
+
+/* Marquee Container */
+.exec-marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+  padding: 8px 0;
+}
+
+.exec-marquee:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* Side edge gradient fades */
+.exec-marquee__fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 64px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.exec-marquee__fade--left {
+  left: 0;
+  background: linear-gradient(90deg, var(--bg) 0%, rgba(246, 248, 244, 0) 100%);
+}
+
+.exec-marquee__fade--right {
+  right: 0;
+  background: linear-gradient(270deg, var(--bg) 0%, rgba(246, 248, 244, 0) 100%);
+}
+
+@media (min-width: 768px) {
+  .exec-marquee__fade {
+    width: 120px;
+  }
+}
+
+/* Marquee Tracks */
+.exec-marquee__inner {
+  display: flex;
+  width: max-content;
+}
+
+.exec-marquee__track {
+  display: flex;
+  gap: 16px;
+  padding-right: 16px;
+  will-change: transform;
+  animation: exec-marquee-scroll 45s linear infinite;
+}
+
+.exec-marquee:hover .exec-marquee__track,
+.exec-marquee:focus-within .exec-marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes exec-marquee-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+/* Executive Card / Pill */
+.exec-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 8px 20px 8px 8px;
+  text-decoration: none;
+  color: inherit;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(15, 26, 20, 0.04);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  flex-shrink: 0;
+}
+
+.exec-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--green);
+  box-shadow: 0 6px 16px rgba(15, 26, 20, 0.08);
+}
+
+.exec-card:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+/* Avatar */
+.exec-card__avatar {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--tint);
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.exec-card__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.exec-card__initials {
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--green-text);
+  letter-spacing: 0.05em;
+}
+
+/* Info */
+.exec-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.exec-card__name {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.exec-card__role {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--green-text);
+  line-height: 1.2;
+}
+
+/* Arrow indicator */
+.exec-card__arrow {
+  font-size: 14px;
+  color: var(--muted);
+  opacity: 0.6;
+  margin-left: 4px;
+  transition: transform 160ms ease, opacity 160ms ease, color 160ms ease;
+}
+
+.exec-card:hover .exec-card__arrow {
+  color: var(--green);
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .exec-marquee {
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .exec-marquee__track {
+    animation: none;
+  }
+
+  .exec-marquee__track--duplicate {
+    display: none;
+  }
+}
