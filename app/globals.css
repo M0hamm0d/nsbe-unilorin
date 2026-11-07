@@ -594,7 +594,7 @@ p { margin: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   html:has(.home-page) { scroll-behavior: auto; }
-  .home-page *,
+  .home-page *:not(.exec-marquee, .exec-marquee *),
   .home-page *::before,
   .home-page *::after {
     animation: none !important;

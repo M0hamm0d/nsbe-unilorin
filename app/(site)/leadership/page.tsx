@@ -30,7 +30,11 @@ function getInitials(name: string): string {
   return name.slice(0, 2).toUpperCase();
 }
 
-function parseSocials(raw?: string | null): { linkedin?: string; twitter?: string; email?: string } {
+function parseSocials(raw?: string | null): {
+  linkedin?: string;
+  twitter?: string;
+  email?: string;
+} {
   if (!raw) return {};
   try {
     if (raw.trim().startsWith("{")) {
@@ -49,7 +53,13 @@ function parseSocials(raw?: string | null): { linkedin?: string; twitter?: strin
 
 function LinkedInIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
       <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.28 1.64 1.64 0 0 0 0 3.28m1.4 9.74v-8.37H5.06v8.37h2.8z" />
     </svg>
   );
@@ -57,7 +67,13 @@ function LinkedInIcon() {
 
 function TwitterIcon() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 24.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
   );
@@ -65,7 +81,17 @@ function TwitterIcon() {
 
 function EmailIcon() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <rect width="20" height="16" x="2" y="4" rx="2" />
       <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
     </svg>
@@ -85,10 +111,12 @@ export default async function LeadershipPage() {
         <div className="container ld-intro__grid">
           <div>
             <p className="eyebrow">Chapter Leadership</p>
-            <h1 className="ld-title">Executive Committee</h1>
+            <h1 className="ld-title">Executive Board</h1>
           </div>
           <p className="ld-lead">
-            Meet the student engineers directing academic excellence, leadership development, and technical innovation across the University of Ilorin.
+            Meet the student engineers directing academic excellence,
+            leadership development, and technical innovation across the
+            University of Ilorin.
           </p>
         </div>
       </section>
@@ -118,9 +146,6 @@ export default async function LeadershipPage() {
                 <h2 id="ld-president-heading" className="ld-president__name">{president.name}</h2>
                 {president.bio && !president.bio.trim().startsWith("{") && !president.bio.includes("linkedin.com") && !president.bio.includes("@") && (
                   <p className="ld-president__bio">{president.bio}</p>
-                )}
-                {president.termStart && president.termEnd && (
-                  <p className="ld-president__term">Term {president.termStart}–{president.termEnd}</p>
                 )}
                 <LeaderSocials leader={president} />
               </div>
@@ -162,9 +187,6 @@ export default async function LeadershipPage() {
                     <div className="ld-card__content">
                       <p className="ld-card__role">{leader.role}</p>
                       <h3 className="ld-card__name">{leader.name}</h3>
-                      {leader.termStart && leader.termEnd && (
-                        <p className="ld-card__term">Term {leader.termStart}–{leader.termEnd}</p>
-                      )}
                       <LeaderSocials leader={leader} />
                     </div>
                   </article>

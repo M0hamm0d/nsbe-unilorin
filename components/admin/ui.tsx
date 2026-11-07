@@ -164,7 +164,7 @@ export function ConfirmDialog({ open, title, children, confirmLabel, danger, onC
   );
 }
 
-export function ImageDrop({ label, value, onChange, maxMB = 5, hint }: { label: string; value?: string; onChange: (name?: string) => void; maxMB?: number; hint?: string }) {
+export function ImageDrop({ label, value, onChange, maxMB = 5, hint, folder = "media" }: { label: string; value?: string; onChange: (name?: string) => void; maxMB?: number; hint?: string; folder?: string }) {
   const [preview, setPreview] = useState<string | undefined>(value);
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
@@ -176,7 +176,7 @@ export function ImageDrop({ label, value, onChange, maxMB = 5, hint }: { label: 
 
   async function pick(f?: File) {
     if (!f) return;
-    if (!/^image\/(jpeg|png|webp)$/.test(f.type)) return setErr("Choose a JPG, PNG or WebP image.");
+    if (!/^image\/(jpeg|png|webp|svg\+xml)$/.test(f.type)) return setErr("Choose a JPG, PNG, WebP or SVG image.");
     if (f.size > maxMB * 1024 * 1024) return setErr(`That image is over ${maxMB} MB. Choose a smaller one.`);
     setErr("");
     setBusy(true);
@@ -186,7 +186,7 @@ export function ImageDrop({ label, value, onChange, maxMB = 5, hint }: { label: 
 
     const formData = new FormData();
     formData.append("file", f);
-    formData.append("folder", "leaders");
+    formData.append("folder", folder);
 
     try {
       const res = await fetch("/api/admin/media/upload", {
@@ -212,13 +212,13 @@ export function ImageDrop({ label, value, onChange, maxMB = 5, hint }: { label: 
       <span className="adm-lb">{label}</span>
       <div className="adm-dz" onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); pick(e.dataTransfer.files[0]); }}>
         {preview ? <img src={preview} alt="" className="adm-dz__img" /> : <Icon name="upl" size={22} />}
-        <b>{busy ? "Uploading photo to cloud…" : value ? (value.startsWith("http") ? "Photo uploaded" : value) : "Drag an image here, or choose a file"}</b>
-        <span>{hint ?? `JPG, PNG or WebP, up to ${maxMB} MB. Use approved images only.`}</span>
+        <b>{busy ? "Uploading image to cloud…" : value ? (value.startsWith("http") || value.startsWith("/") ? "Image uploaded" : value) : "Drag an image here, or choose a file"}</b>
+        <span>{hint ?? `JPG, PNG, WebP or SVG, up to ${maxMB} MB. Use approved images only.`}</span>
         <div className="adm-actions" style={{ justifyContent: "center" }}>
           <button type="button" className="adm-btn2 adm-sm" disabled={busy} onClick={() => input.current?.click()}>{value ? "Replace" : "Choose file"}</button>
           {value && <button type="button" className="adm-btn2 adm-sm" disabled={busy} onClick={() => { setPreview(undefined); onChange(undefined); }}>Remove</button>}
         </div>
-        <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" className="adm-sr" onChange={(e) => pick(e.target.files?.[0])} />
+        <input ref={input} type="file" accept="image/jpeg,image/png,image/webp,image/svg+xml" className="adm-sr" onChange={(e) => pick(e.target.files?.[0])} />
       </div>
       {err && <FieldError text={err} />}
     </div>
