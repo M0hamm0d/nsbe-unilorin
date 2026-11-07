@@ -141,7 +141,7 @@
 }
 
 /* Executive Card / Pill */
-.exec-card {
+.exec-marquee-section .exec-card {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -157,19 +157,19 @@
   flex-shrink: 0;
 }
 
-.exec-card:hover {
+.exec-marquee-section .exec-card:hover {
   transform: translateY(-2px);
   border-color: var(--green);
   box-shadow: 0 6px 16px rgba(15, 26, 20, 0.08);
 }
 
-.exec-card:focus-visible {
+.exec-marquee-section .exec-card:focus-visible {
   outline: 2px solid var(--green);
   outline-offset: 2px;
 }
 
 /* Avatar */
-.exec-card__avatar {
+.exec-marquee-section .exec-card__avatar {
   position: relative;
   width: 42px;
   height: 42px;
@@ -183,14 +183,14 @@
   flex-shrink: 0;
 }
 
-.exec-card__photo {
+.exec-marquee-section .exec-card__photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center top;
 }
 
-.exec-card__initials {
+.exec-marquee-section .exec-card__initials {
   font-family: var(--font-sans), sans-serif;
   font-weight: 700;
   font-size: 13px;
@@ -199,13 +199,13 @@
 }
 
 /* Info */
-.exec-card__info {
+.exec-marquee-section .exec-card__info {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.exec-card__name {
+.exec-marquee-section .exec-card__name {
   font-family: var(--font-sans), sans-serif;
   font-size: 13.5px;
   font-weight: 700;
@@ -213,7 +213,7 @@
   line-height: 1.2;
 }
 
-.exec-card__role {
+.exec-marquee-section .exec-card__role {
   font-family: var(--font-sans), sans-serif;
   font-size: 11.5px;
   font-weight: 500;
@@ -222,7 +222,7 @@
 }
 
 /* Arrow indicator */
-.exec-card__arrow {
+.exec-marquee-section .exec-card__arrow {
   font-size: 13px;
   color: var(--muted);
   opacity: 0.5;
@@ -230,7 +230,7 @@
   transition: transform 160ms ease, opacity 160ms ease, color 160ms ease;
 }
 
-.exec-card:hover .exec-card__arrow {
+.exec-marquee-section .exec-card:hover .exec-card__arrow {
   color: var(--green);
   opacity: 1;
   transform: translate(2px, -2px);
