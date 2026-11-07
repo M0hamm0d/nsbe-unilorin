@@ -1,6 +1,9 @@
 import Link from "next/link";
 import AcademicHubPreview from "@/components/AcademicHubPreview";
 import Image from "next/image";
+import { connection } from "next/server";
+import Leadership from "@/app/files/Leadership";
+import { getPublicLeaders } from "@/lib/admin/actions";
 
 const quickLinks = [
   { href: "/academic-hub", title: "Academic Hub", text: "Past questions and materials by department and level." },
@@ -28,7 +31,25 @@ const partners = [
   { name: "Intel", src: "/partners/intel.svg" },
 ];
 
-export default function Home() {
+export const instant = false;
+
+export default async function Home() {
+  await connection();
+  const leaders = await getPublicLeaders();
+  const leadershipItems = leaders.map((leader) => ({
+    slug: `leader-${leader.id}`,
+    name: leader.name,
+    role: leader.role,
+    term: [leader.termStart, leader.termEnd].filter(Boolean).join("–") || undefined,
+    bio: leader.bio.trim().startsWith("{") || !leader.bio.trim() ? [] : [leader.bio],
+    photo: leader.portrait,
+    photoAlt: `Portrait of ${leader.name}`,
+  }));
+  const currentSession = leaders.find((leader) => leader.termStart || leader.termEnd);
+  const leadershipSession = currentSession
+    ? [currentSession.termStart, currentSession.termEnd].filter(Boolean).join("–")
+    : undefined;
+
   return (
     <div className="home-page">
       {/* Hero */}
@@ -133,6 +154,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Leadership */}
+      <Leadership items={leadershipItems} session={leadershipSession} />
 
       {/* Academic Hub */}
       <section className="section hub">

@@ -642,39 +642,28 @@ export async function deleteAdminLeader(id: string): Promise<{ ok: boolean }> {
 
 /** Fetch public visible executive leaders for the public Leadership page. */
 export async function getPublicLeaders(): Promise<import("./types").Leader[]> {
-  if (!isSupabaseConfigured()) {
-    const { LEADERS } = await import("./mock-data");
-    return LEADERS.filter((l) => l.visible);
+  const { data, error } = await supabaseAdmin()
+    .from("leaders")
+    .select("*")
+    .eq("visible", true)
+    .order("order_index", { ascending: true });
+
+  if (error) {
+    console.error("Failed to fetch public leaders from Supabase:", error);
+    throw new Error("Unable to load public leadership from Supabase.", { cause: error });
   }
 
-  try {
-    const { data, error } = await supabaseAdmin()
-      .from("leaders")
-      .select("*")
-      .eq("visible", true)
-      .order("order_index", { ascending: true });
-
-    if (error || !data || data.length === 0) {
-      const { LEADERS } = await import("./mock-data");
-      return LEADERS.filter((l) => l.visible);
-    }
-
-    return data.map((l) => ({
-      id: l.id,
-      name: l.name,
-      role: l.role,
-      bio: l.bio || "",
-      portrait: l.portrait_url || undefined,
-      termStart: l.term_start || undefined,
-      termEnd: l.term_end || undefined,
-      visible: l.visible,
-      order: l.order_index,
-    }));
-  } catch (err) {
-    console.error("getPublicLeaders error:", err);
-    const { LEADERS } = await import("./mock-data");
-    return LEADERS.filter((l) => l.visible);
-  }
+  return (data ?? []).map((l) => ({
+    id: l.id,
+    name: l.name,
+    role: l.role,
+    bio: l.bio || "",
+    portrait: l.portrait_url || undefined,
+    termStart: l.term_start || undefined,
+    termEnd: l.term_end || undefined,
+    visible: l.visible,
+    order: l.order_index,
+  }));
 }
 
 // ==============================================================================
@@ -890,5 +879,4 @@ export async function deleteAdminUser(id: string): Promise<{ ok: boolean }> {
     return { ok: false };
   }
 }
-
 
