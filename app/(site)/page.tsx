@@ -1,9 +1,14 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import AcademicHubPreview from "@/components/AcademicHubPreview";
 import Image from "next/image";
 import { connection } from "next/server";
 import Leadership from "@/app/files/Leadership";
 import { getPublicLeaders } from "@/lib/admin/actions";
+import ExecutiveMarquee from "@/components/ExecutiveMarquee";
+import { getPublicSponsors } from "@/lib/admin/actions";
+
+export const instant = false;
 
 const quickLinks = [
   { href: "/academic-hub", title: "Academic Hub", text: "Past questions and materials by department and level." },
@@ -24,16 +29,10 @@ const programs = [
   { cls: "pcard--3", img: "/lab-nsbe.jpg", category: "Technical", name: "Build Lab", text: "Hands-on workshops where members design and build real engineering projects together." },
 ];
 
-const partners = [
-  { name: "Siemens", src: "/partners/siemens.svg" },
-  { name: "Bosch", src: "/partners/bosch.svg" },
-  { name: "Schneider Electric", src: "/partners/schneider-electric.svg" },
-  { name: "Intel", src: "/partners/intel.svg" },
-];
-
 export const instant = false;
 
-export default async function Home() {
+export default async async function Home() {
+  const sponsors = await getPublicSponsors();
   await connection();
   const leaders = await getPublicLeaders();
   const leadershipItems = leaders.map((leader) => ({
@@ -88,6 +87,11 @@ export default async function Home() {
           </nav>
         </div>
       </section>
+
+      {/* Chapter Executives Spotlight Marquee */}
+      <Suspense fallback={null}>
+        <ExecutiveMarquee />
+      </Suspense>
 
       {/* About */}
       <section className="section about">
@@ -188,19 +192,47 @@ export default async function Home() {
       </section>
 
       {/* Sponsors */}
-      <section className="section sponsors">
-        <div className="container">
-          <p className="eyebrow home-reveal">Sponsors &amp; partners</p>
-          <h2 className="h2 sponsors__title">Organisations that support the chapter.</h2>
-          <div className="sponsors__grid home-reveal">
-            {partners.map((p) => (
-              <div className="sponsor" key={p.name}>
-                <Image src={p.src} alt={p.name} width={200} height={100} />
-              </div>
-            ))}
+      {sponsors.length > 0 && (
+        <section className="section sponsors">
+          <div className="container">
+            <p className="eyebrow home-reveal">Sponsors &amp; partners</p>
+            <h2 className="h2 sponsors__title">Organisations that support the chapter.</h2>
+            <div className="sponsors__grid home-reveal">
+              {sponsors.map((p) => {
+                const logoSrc = p.logo || "/partners/siemens.svg";
+                return (
+                  <div className="sponsor" key={p.id}>
+                    {p.website ? (
+                      <a
+                        href={p.website.startsWith("http") ? p.website : `https://${p.website}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={p.name}
+                      >
+                        <Image
+                          src={logoSrc}
+                          alt={p.name}
+                          width={200}
+                          height={100}
+                          unoptimized={logoSrc.startsWith("http") || logoSrc.endsWith(".svg")}
+                        />
+                      </a>
+                    ) : (
+                      <Image
+                        src={logoSrc}
+                        alt={p.name}
+                        width={200}
+                        height={100}
+                        unoptimized={logoSrc.startsWith("http") || logoSrc.endsWith(".svg")}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

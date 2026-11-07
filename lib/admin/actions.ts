@@ -880,3 +880,147 @@ export async function deleteAdminUser(id: string): Promise<{ ok: boolean }> {
   }
 }
 
+// ==============================================================================
+// 7. CORPORATE SPONSORS & PARTNERS
+// ==============================================================================
+
+/** Fetch all sponsors for the admin panel. */
+export async function getAdminSponsors(): Promise<import("./types").Sponsor[]> {
+  await guard("sponsors");
+  if (!isSupabaseConfigured()) {
+    const { SPONSORS } = await import("./mock-data");
+    return SPONSORS;
+  }
+
+  try {
+    const { data, error } = await supabaseAdmin()
+      .from("sponsors")
+      .select("*")
+      .order("order_index", { ascending: true });
+
+    if (error || !data || data.length === 0) {
+      const { SPONSORS } = await import("./mock-data");
+      return SPONSORS;
+    }
+
+    return data.map((s) => ({
+      id: s.id,
+      name: s.name,
+      description: s.description || "",
+      website: s.website_url || undefined,
+      logo: s.logo_url || undefined,
+      order: s.order_index,
+      confirmed: s.confirmed,
+      visible: s.visible,
+    }));
+  } catch (err) {
+    console.error("getAdminSponsors error:", err);
+    const { SPONSORS } = await import("./mock-data");
+    return SPONSORS;
+  }
+}
+
+/** Save (insert or update) a sponsor/partner in Supabase. */
+export async function saveAdminSponsor(
+  sponsor: import("./types").Sponsor
+): Promise<{ ok: boolean; id?: string }> {
+  await guard("sponsors");
+
+  if (!isSupabaseConfigured()) return { ok: true, id: sponsor.id };
+
+  try {
+    const payload = {
+      name: sponsor.name.trim(),
+      description: sponsor.description || null,
+      website_url: sponsor.website || null,
+      logo_url: sponsor.logo || "",
+      order_index: sponsor.order,
+      confirmed: sponsor.confirmed,
+      visible: sponsor.confirmed ? sponsor.visible : false,
+    };
+
+    if (sponsor.id && UUID_REGEX.test(sponsor.id)) {
+      const { error } = await supabaseAdmin()
+        .from("sponsors")
+        .update(payload)
+        .eq("id", sponsor.id);
+      if (error) throw error;
+    } else {
+      const { data, error } = await supabaseAdmin()
+        .from("sponsors")
+        .insert(payload)
+        .select("id")
+        .single();
+      if (error) throw error;
+      sponsor.id = data.id;
+    }
+
+    revalidatePath("/admin/sponsors");
+    revalidatePath("/");
+    return { ok: true, id: sponsor.id };
+  } catch (err) {
+    console.error("saveAdminSponsor error:", err);
+    return { ok: false };
+  }
+}
+
+/** Delete a sponsor/partner from Supabase. */
+export async function deleteAdminSponsor(id: string): Promise<{ ok: boolean }> {
+  await guard("sponsors");
+
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabaseAdmin()
+      .from("sponsors")
+      .delete()
+      .eq("id", id);
+    if (error) throw error;
+
+    revalidatePath("/admin/sponsors");
+    revalidatePath("/");
+    return { ok: true };
+  } catch (err) {
+    console.error("deleteAdminSponsor error:", err);
+    return { ok: false };
+  }
+}
+
+/** Fetch public visible & confirmed sponsors for the homepage. */
+export async function getPublicSponsors(): Promise<import("./types").Sponsor[]> {
+  if (!isSupabaseConfigured()) {
+    const { SPONSORS } = await import("./mock-data");
+    return SPONSORS.filter((s) => s.visible && s.confirmed);
+  }
+
+  try {
+    const { data, error } = await supabaseAdmin()
+      .from("sponsors")
+      .select("*")
+      .eq("visible", true)
+      .eq("confirmed", true)
+      .order("order_index", { ascending: true });
+
+    if (error || !data || data.length === 0) {
+      const { SPONSORS } = await import("./mock-data");
+      return SPONSORS.filter((s) => s.visible && s.confirmed);
+    }
+
+    return data.map((s) => ({
+      id: s.id,
+      name: s.name,
+      description: s.description || "",
+      website: s.website_url || undefined,
+      logo: s.logo_url || undefined,
+      order: s.order_index,
+      confirmed: s.confirmed,
+      visible: s.visible,
+    }));
+  } catch (err) {
+    console.error("getPublicSponsors error:", err);
+    const { SPONSORS } = await import("./mock-data");
+    return SPONSORS.filter((s) => s.visible && s.confirmed);
+  }
+}
+
+

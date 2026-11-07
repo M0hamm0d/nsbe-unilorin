@@ -48,7 +48,7 @@ export default function JoinPage() {
             <p>
               <a href={`mailto:${CONTACT_EMAIL}`} className="link">{CONTACT_EMAIL}</a>
               {SOCIAL_LINKS.map((s) => (
-                <span key={s.label}> · <a href={s.href} className="link">{s.label}</a></span>
+                <span key={s.label}> · <a href={s.href} target="_blank" rel="noopener noreferrer" className="link">{s.label}</a></span>
               ))}
             </p>
           </div>

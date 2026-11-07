@@ -23,12 +23,12 @@ export const PROGRAMS: Program[] = [
 ];
 
 export const LEADERS: Leader[] = [
-  { id: "ld1", name: "Ifeoluwa Abdulsamad", role: "Chapter President", bio: "Leading the chapter’s strategic vision, institutional partnerships, and member development.", termStart: "2025", termEnd: "2026", visible: true, order: 1 },
-  { id: "ld2", name: "Amina Yusuf", role: "Vice President", bio: "Coordinating internal chapter operations, committee deliverables, and chapter administration.", termStart: "2025", termEnd: "2026", visible: true, order: 2 },
-  { id: "ld3", name: "Tunde Bello", role: "Academic Excellence Chair", bio: "Directing the Academic Hub library, past question collection drives, and peer tutoring sessions.", termStart: "2025", termEnd: "2026", visible: true, order: 3 },
-  { id: "ld4", name: "Chiamaka Obi", role: "General Secretary", bio: "Managing chapter documentation, communications, records, and executive correspondence.", termStart: "2025", termEnd: "2026", visible: true, order: 4 },
-  { id: "ld5", name: "Ibrahim Musa", role: "Technical Director", bio: "Leading hands-on engineering workshops, the Build Lab initiative, and student project mentorship.", termStart: "2025", termEnd: "2026", visible: true, order: 5 },
-  { id: "ld6", name: "Fatima Aliyu", role: "Programs & Events Chair", bio: "Overseeing industrial tours, engineering career fairs, guest speaker series, and chapter outreach.", termStart: "2025", termEnd: "2026", visible: true, order: 6 },
+  { id: "ld1", name: "Ifeoluwa Abdulsamad", role: "Chapter President", bio: "Leading the chapter’s strategic vision, institutional partnerships, and member development.", visible: true, order: 1 },
+  { id: "ld2", name: "Amina Yusuf", role: "Vice President", bio: "Coordinating internal chapter operations, committee deliverables, and chapter administration.", visible: true, order: 2 },
+  { id: "ld3", name: "Tunde Bello", role: "Academic Excellence Chair", bio: "Directing the Academic Hub library, past question collection drives, and peer tutoring sessions.", visible: true, order: 3 },
+  { id: "ld4", name: "Chiamaka Obi", role: "General Secretary", bio: "Managing chapter documentation, communications, records, and executive correspondence.", visible: true, order: 4 },
+  { id: "ld5", name: "Ibrahim Musa", role: "Technical Director", bio: "Leading hands-on engineering workshops, the Build Lab initiative, and student project mentorship.", visible: true, order: 5 },
+  { id: "ld6", name: "Fatima Aliyu", role: "Programs & Events Chair", bio: "Overseeing industrial tours, engineering career fairs, guest speaker series, and chapter outreach.", visible: true, order: 6 },
 ];
 
 export const RESOURCES: Resource[] = [
@@ -63,10 +63,10 @@ export const JOINS: JoinRequest[] = [
 ];
 
 export const SPONSORS: Sponsor[] = [
-  { id: "sp1", name: "[Partner name 1]", description: "Short description of the partnership.", website: "https://partner1.example", order: 1, confirmed: true, visible: true },
-  { id: "sp2", name: "[Partner name 2]", description: "Short description of the partnership.", website: "https://partner2.example", order: 2, confirmed: true, visible: true },
-  { id: "sp3", name: "[Partner name 3]", description: "Awaiting written permission to show the logo.", website: "https://partner3.example", order: 3, confirmed: false, visible: false },
-  { id: "sp4", name: "[Possible sponsor]", description: "Conversation only. Not confirmed.", order: 4, confirmed: false, visible: false },
+  { id: "sp1", name: "Siemens", description: "Global technology powerhouse in engineering and electrification.", logo: "/partners/siemens.svg", order: 1, confirmed: true, visible: true },
+  { id: "sp2", name: "Bosch", description: "Leading global supplier of technology and engineering services.", logo: "/partners/bosch.svg", order: 2, confirmed: true, visible: true },
+  { id: "sp3", name: "Schneider Electric", description: "Leader in the digital transformation of energy management and automation.", logo: "/partners/schneider-electric.svg", order: 3, confirmed: true, visible: true },
+  { id: "sp4", name: "Intel", description: "Innovator in semiconductor design and high-performance computing.", logo: "/partners/intel.svg", order: 4, confirmed: true, visible: true },
 ];
 
 export const USERS: AdminUser[] = DEMO_USERS;
@@ -80,11 +80,11 @@ export const AUDIT: AuditEntry[] = [
 ];
 
 export const SETTINGS: SiteSettings[] = [{
-  id: "site", email: "hello@nsbeunilorin.org", phone: "", office: "",
+  id: "site", email: "nsbeunilorinchapter@gmail.com", phone: "", office: "",
   footerText: "University of Ilorin chapter of the National Society of Black Engineers.",
   socials: [
-    { platform: "Instagram", url: "https://instagram.com/official-handle", show: true },
-    { platform: "X", url: "", show: false },
-    { platform: "LinkedIn", url: "https://linkedin.com/company/official-page", show: true },
+    { platform: "Instagram", url: "https://www.instagram.com/nsbe.unilorin", show: true },
+    { platform: "X", url: "https://x.com/NSBE_UNILORIN1", show: true },
+    { platform: "LinkedIn", url: "https://www.linkedin.com/company/nsbe-unilorin-chapter/", show: true },
   ],
 }];

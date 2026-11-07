@@ -1,4 +1,6 @@
 :root {
+  --font-sans: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, Cambria, "Times New Roman", serif;
   --green: #2ab456;
   --green-hover: #3cc768;
   --green-text: #1b7a3a;
@@ -592,7 +594,7 @@ p { margin: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   html:has(.home-page) { scroll-behavior: auto; }
-  .home-page *,
+  .home-page *:not(.exec-marquee, .exec-marquee *),
   .home-page *::before,
   .home-page *::after {
     animation: none !important;
