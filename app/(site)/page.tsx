@@ -29,9 +29,8 @@ const programs = [
   { cls: "pcard--3", img: "/lab-nsbe.jpg", category: "Technical", name: "Build Lab", text: "Hands-on workshops where members design and build real engineering projects together." },
 ];
 
-export const instant = false;
 
-export default async async function Home() {
+export default async function Home() {
   const sponsors = await getPublicSponsors();
   await connection();
   const leaders = await getPublicLeaders();
