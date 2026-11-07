@@ -12,8 +12,7 @@ export const metadata: Metadata = {
     "Meet the executive board and student leaders directing the University of Ilorin chapter of the National Society of Black Engineers.",
 };
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const instant = false;
 
 function normalizeImageSrc(src?: string | null): string | null {
   if (!src || typeof src !== "string") return null;
