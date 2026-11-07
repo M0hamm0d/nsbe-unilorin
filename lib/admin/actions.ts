@@ -643,6 +643,7 @@ export async function deleteAdminLeader(id: string): Promise<{ ok: boolean }> {
 /** Fetch public visible executive leaders for the public Leadership page. */
 export async function getPublicLeaders(): Promise<import("./types").Leader[]> {
   if (!isSupabaseConfigured()) {
+    console.warn("getPublicLeaders: Supabase credentials not found, serving mock leaders.");
     const { LEADERS } = await import("./mock-data");
     return LEADERS.filter((l) => l.visible);
   }
@@ -654,7 +655,14 @@ export async function getPublicLeaders(): Promise<import("./types").Leader[]> {
       .eq("visible", true)
       .order("order_index", { ascending: true });
 
-    if (error || !data || data.length === 0) {
+    if (error) {
+      console.error("getPublicLeaders Supabase error:", error);
+      const { LEADERS } = await import("./mock-data");
+      return LEADERS.filter((l) => l.visible);
+    }
+
+    if (!data || data.length === 0) {
+      console.warn("getPublicLeaders: No active leaders in Supabase table, serving mock leaders.");
       const { LEADERS } = await import("./mock-data");
       return LEADERS.filter((l) => l.visible);
     }
@@ -671,7 +679,7 @@ export async function getPublicLeaders(): Promise<import("./types").Leader[]> {
       order: l.order_index,
     }));
   } catch (err) {
-    console.error("getPublicLeaders error:", err);
+    console.error("getPublicLeaders exception:", err);
     const { LEADERS } = await import("./mock-data");
     return LEADERS.filter((l) => l.visible);
   }
