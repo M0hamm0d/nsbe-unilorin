@@ -53,7 +53,8 @@ export function TextareaField({ id, label, optional, help, error, ...input }: Co
 export function SelectField({
   id, label, error, value, onChange, placeholder, options, name, autoComplete,
 }: Common & {
-  value: string; onChange: (v: string) => void; placeholder: string; options: string[]; name?: string; autoComplete?: string;
+  value: string; onChange: (v: string) => void; placeholder: string;
+  options: (string | { value: string; label: string })[]; name?: string; autoComplete?: string;
 }) {
   return (
     <div className="fm-field">
@@ -65,7 +66,11 @@ export function SelectField({
         aria-invalid={!!error} aria-describedby={describedBy(id, undefined, error)}
       >
         <option value="">{placeholder}</option>
-        {options.map((o) => <option key={o} value={o}>{o}</option>)}
+        {options.map((option) => {
+          const optionValue = typeof option === "string" ? option : option.value;
+          const optionLabel = typeof option === "string" ? option : option.label;
+          return <option key={optionValue} value={optionValue}>{optionLabel}</option>;
+        })}
       </select>
       <FieldError id={id} error={error} />
     </div>

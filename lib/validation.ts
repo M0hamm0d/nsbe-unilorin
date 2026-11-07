@@ -1,4 +1,4 @@
-import { DEPARTMENTS, LEVELS } from "@/lib/academic-resources";
+import { DEPARTMENTS, LEVELS, RESOURCE_TYPES, type ResourceType } from "@/lib/academic-resources";
 
 export const INTERESTS = ["Events", "Programs", "Scholarships", "Academic Hub"] as const;
 
@@ -9,6 +9,11 @@ export type JoinInput = {
 export type TutorialInput = {
   fullName: string; email: string; department: string; level: string;
   subjects: string; phone: string; consent: boolean;
+};
+export type ResourceRequestInput = {
+  fullName: string; email: string; department: string; level: string; phone: string;
+  resourceType: ResourceType | ""; courseCode: string; courseTitle: string;
+  session: string; details: string; consent: boolean;
 };
 export type Errors<T> = Partial<Record<keyof T, string>>;
 
@@ -42,6 +47,23 @@ export function normalizeTutorial(raw: Record<string, unknown>): TutorialInput {
     level: line(raw.level, 10),
     subjects: block(raw.subjects, 500),
     phone: line(raw.phone, 20),
+    consent: raw.consent === true,
+  };
+}
+
+export function normalizeResourceRequest(raw: Record<string, unknown>): ResourceRequestInput {
+  const resourceType = line(raw.resourceType, 30);
+  return {
+    fullName: line(raw.fullName, 100),
+    email: line(raw.email, 254).toLowerCase(),
+    department: line(raw.department, 100),
+    level: line(raw.level, 10),
+    phone: line(raw.phone, 20),
+    resourceType: RESOURCE_TYPES.find((type) => type.value === resourceType)?.value ?? "",
+    courseCode: line(raw.courseCode, 30),
+    courseTitle: line(raw.courseTitle, 150),
+    session: line(raw.session, 20),
+    details: block(raw.details, 500),
     consent: raw.consent === true,
   };
 }
@@ -81,5 +103,16 @@ export function validateTutorial(v: TutorialInput): Errors<TutorialInput> {
   const s = v.subjects.trim();
   if (!s) e.subjects = "Tell us which subjects or topics you would like help with.";
   else if (s.length < 3) e.subjects = "Add a little more detail, for example a course name or topic.";
+  return e;
+}
+
+export function validateResourceRequest(v: ResourceRequestInput): Errors<ResourceRequestInput> {
+  const e: Errors<ResourceRequestInput> = validateBase(v, "Tick the box to confirm you have read the privacy notice.");
+  if (!v.resourceType || !RESOURCE_TYPES.some((type) => type.value === v.resourceType)) {
+    e.resourceType = "Choose the type of resource you need.";
+  }
+  if (!v.courseTitle.trim()) e.courseTitle = "Enter the course or project title.";
+  else if (v.courseTitle.trim().length < 3) e.courseTitle = "Enter at least 3 characters.";
+  if (v.session && !/^[\w /-]{1,20}$/.test(v.session)) e.session = "Enter a valid session or year, or leave this blank.";
   return e;
 }

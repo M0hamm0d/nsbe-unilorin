@@ -1,4 +1,4 @@
-/* Styles for the join and tutorial-interest route group. */
+/* Styles for the public form route group. */
 .forms-page { --error: #a32d1f; }
 .forms-page .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
