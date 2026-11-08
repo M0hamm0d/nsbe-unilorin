@@ -41,17 +41,15 @@ function Portrait({ ex, sizes }: { ex: Executive; sizes: string }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Section                                                             */
-/* ------------------------------------------------------------------ */
 export default function Leadership({ items, session }: { items: Executive[]; session?: string }) {
+  const sectionRef = useRef<HTMLElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [enterFrom, setEnterFrom] = useState<DOMRect | null>(null);
   const opener = useRef<HTMLElement | null>(null);
   const restoringFocus = useRef(false);
 
-  // Drift needs enough cards to loop seamlessly; otherwise it is a plain row.
+  const executives = items.slice(1);
   const loopable = items.length >= 5;
 
   const flags = useRef({
@@ -85,8 +83,10 @@ export default function Leadership({ items, session }: { items: Executive[]; ses
     const el = viewportRef.current;
     if (!el || !loopable) return 0;
     const cards = el.querySelectorAll<HTMLElement>(".exec-card");
-    return cards.length > items.length ? cards[items.length].offsetLeft - cards[0].offsetLeft : 0;
-  }, [items.length, loopable]);
+    return cards.length > executives.length
+      ? cards[executives.length].offsetLeft - cards[0].offsetLeft
+      : 0;
+  }, [executives.length, loopable]);
 
   /* drift loop: scrollLeft-based so swipe, wheel and drag all just work */
   useEffect(() => {
@@ -152,7 +152,7 @@ export default function Leadership({ items, session }: { items: Executive[]; ses
 
   const cardPhotoRect = useCallback(
     (slug: string): DOMRect | null => {
-      const photo = viewportRef.current?.querySelector<HTMLElement>(`[data-exec-id="${slug}"] .exec-photo`);
+      const photo = sectionRef.current?.querySelector<HTMLElement>(`[data-exec-id="${slug}"] .exec-photo`);
       if (!photo) return null;
       const r = photo.getBoundingClientRect();
       return r.right > 0 && r.left < window.innerWidth ? r : null; // only if on screen
@@ -170,7 +170,7 @@ export default function Leadership({ items, session }: { items: Executive[]; ses
     requestAnimationFrame(() => {
       flags.current.focus = false;
       restoringFocus.current = true;
-      const btn = viewportRef.current?.querySelector<HTMLElement>(`[data-exec-id="${slug}"] .exec-card__button`);
+      const btn = sectionRef.current?.querySelector<HTMLElement>(`[data-exec-id="${slug}"] .exec-card__button`);
       (btn ?? opener.current)?.focus({ preventScroll: true });
       restoringFocus.current = false;
     });
@@ -191,10 +191,10 @@ export default function Leadership({ items, session }: { items: Executive[]; ses
     }
   }, [activeIndex, items]);
 
-  const renderCard = (ex: Executive, i: number, dup: boolean) => (
+  const renderCard = (ex: Executive, i: number, dup: boolean, variant = "") => (
     <li
       key={(dup ? "dup-" : "") + ex.slug}
-      className="exec-card"
+      className={`exec-card${variant ? ` ${variant}` : ""}`}
       data-exec-id={dup ? undefined : ex.slug}
       aria-hidden={dup || undefined}
     >
@@ -208,13 +208,20 @@ export default function Leadership({ items, session }: { items: Executive[]; ses
       >
         <span className="exec-photo">
           <span className="exec-photo__media">
-            <Portrait ex={ex} sizes="(min-width: 48em) 300px, 76vw" />
+            <Portrait
+              ex={ex}
+              sizes={variant === "exec-card--president"
+                ? "(min-width: 48em) 560px, 100vw"
+                : "(min-width: 48em) 300px, 76vw"}
+            />
           </span>
-          <span className="exec-card__order" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
           <span className="exec-card__plus" aria-hidden="true">+</span>
           <span className="exec-card__view" aria-hidden="true">View profile <span>→</span></span>
         </span>
         <span className="exec-card__meta">
+          {/* {variant === "exec-card--president" && (
+            <span className="exec-president__mark">NSBE Unilorin</span>
+          )} */}
           <span className="exec-card__role">{ex.role}</span>
           <span className="exec-card__name">{ex.name}</span>
           {ex.term && <span className="exec-card__dept">Term {ex.term}</span>}
@@ -225,13 +232,17 @@ export default function Leadership({ items, session }: { items: Executive[]; ses
 
   if (items.length === 0) {
     return (
-      <section className="section section--surface exec" id="leadership" aria-labelledby="exec-heading">
+      <section ref={sectionRef} className="section section--surface exec" id="leadership" aria-labelledby="exec-heading">
         <div className="container">
           <div className="exec-head">
-            <p className="exec-breadcrumb"><Link href="/about">About</Link><span aria-hidden="true"> / </span>Leadership</p>
-            <h2 className="section-heading" id="exec-heading">The Executives</h2>
-            <p className="exec-session">Session {session ?? "to be confirmed"}</p>
-            <p className="section__intro">Leadership details are currently being updated by the chapter executives.</p>
+            <div className="exec-head__main">
+              <p className="exec-breadcrumb"><Link href="/about">About</Link><span aria-hidden="true"> / </span>Leadership</p>
+              <h2 className="section-heading" id="exec-heading">People who move us forward.</h2>
+            </div>
+            <div className="exec-head__aside exec-empty">
+              <p className="section__intro">Leadership details are currently being updated by the chapter executives.</p>
+              <p className="exec-session">Session {session ?? "to be confirmed"}</p>
+            </div>
           </div>
         </div>
       </section>
@@ -239,45 +250,74 @@ export default function Leadership({ items, session }: { items: Executive[]; ses
   }
 
   return (
-    <section className="section section--surface exec" id="leadership" aria-labelledby="exec-heading">
+    <section ref={sectionRef} className="section section--surface exec" id="leadership" aria-labelledby="exec-heading">
       <div className="container">
         <div className="exec-head">
-          <p className="exec-breadcrumb"><Link href="/about">About</Link><span aria-hidden="true"> / </span>Leadership</p>
-          <h2 className="section-heading" id="exec-heading">The Executives</h2>
-          {/* <p className="exec-session">Session {session ?? "to be confirmed"}</p> */}
-          <p className="section__intro">
-            The team behind NSBE Unilorin, in order of office. Drag to browse, select a card to read more.
-          </p>
+          <div className="exec-head__main">
+            <p className="exec-breadcrumb"><Link href="/about">About</Link><span aria-hidden="true"> / </span>Leadership</p>
+            <h2 className="section-heading" id="exec-heading">People who move us forward.</h2>
+          </div>
+          <div className="exec-head__aside">
+            <p className="section__intro">
+              Meet the president and the team shaping what’s next for NSBE Unilorin.
+            </p>
+            {session && <p className="exec-session">Session {session}</p>}
+          </div>
         </div>
-      </div>
 
-      <div
-        ref={viewportRef}
-        className="exec-viewport"
-        role="region"
-        aria-roledescription="carousel"
-        aria-label="Chapter executives"
-        onPointerEnter={(e) => { if (e.pointerType === "mouse") flags.current.hover = true; }}
-        onPointerLeave={() => { flags.current.hover = false; }}
-        onFocusCapture={() => {
-          if (restoringFocus.current) {
-            restoringFocus.current = false;
-            return;
-          }
-          flags.current.focus = true;
-        }}
-        onBlurCapture={() => { flags.current.focus = false; }}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-      >
-        <ul className="exec-track">
-          {items.map((ex, i) => renderCard(ex, i, false))}
-          {loopable && items.map((ex, i) => renderCard(ex, i, true))}
-        </ul>
-      </div>
+        <div className="exec-president">
+          <div className="exec-subhead">
+            <div>
+              <p className="exec-subhead__eyebrow">01 / Chapter leadership</p>
+              <h3 id="exec-president-heading">The president</h3>
+            </div>
+            <span className="exec-president__note">Leading the way, together.</span>
+          </div>
+          <ul className="exec-track exec-president__track" aria-labelledby="exec-president-heading">
+            {renderCard(items[0], 0, false, "exec-card--president")}
+          </ul>
+        </div>
 
+        {executives.length > 0 && (
+          <div className="exec-team">
+            <div className="exec-subhead exec-team__head">
+              <div>
+                <p className="exec-subhead__eyebrow">02 / The team</p>
+                <h3 id="exec-team-heading">Other executives</h3>
+              </div>
+              {/* <p className="exec-team__hint">Drag to browse, or select a profile to learn more.</p> */}
+            </div>
+          </div>
+        )}
+      </div>
+      {executives.length > 0 && (
+        <div
+          ref={viewportRef}
+          className="exec-viewport"
+          role="region"
+          aria-roledescription="carousel"
+          aria-labelledby="exec-team-heading"
+          onPointerEnter={(e) => { if (e.pointerType === "mouse") flags.current.hover = true; }}
+          onPointerLeave={() => { flags.current.hover = false; }}
+          onFocusCapture={() => {
+            if (restoringFocus.current) {
+              restoringFocus.current = false;
+              return;
+            }
+            flags.current.focus = true;
+          }}
+          onBlurCapture={() => { flags.current.focus = false; }}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
+        >
+          <ul className="exec-track">
+            {executives.map((ex, i) => renderCard(ex, i + 1, false))}
+            {loopable && executives.map((ex, i) => renderCard(ex, i + 1, true))}
+          </ul>
+        </div>
+      )}
       {activeIndex !== null && (
         <ProfileDialog
           items={items}

@@ -1,11 +1,9 @@
-import { Suspense } from "react";
 import Link from "next/link";
 import AcademicHubPreview from "@/components/AcademicHubPreview";
 import Image from "next/image";
 import { connection } from "next/server";
 import Leadership from "@/app/files/Leadership";
 import { getPublicLeaders } from "@/lib/admin/actions";
-import ExecutiveMarquee from "@/components/ExecutiveMarquee";
 import { getPublicSponsors } from "@/lib/admin/actions";
 
 export const instant = false;
@@ -86,11 +84,6 @@ export default async function Home() {
           </nav>
         </div>
       </section>
-
-      {/* Chapter Executives Spotlight Marquee */}
-      <Suspense fallback={null}>
-        <ExecutiveMarquee />
-      </Suspense>
 
       {/* About */}
       <section className="section about">
