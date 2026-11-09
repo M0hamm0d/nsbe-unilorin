@@ -3,6 +3,7 @@ import AcademicHubPreview from "@/components/AcademicHubPreview";
 import Image from "next/image";
 import { connection } from "next/server";
 import Leadership from "@/app/files/Leadership";
+import Sponsors from "@/components/Sponsors";
 import { getPublicLeaders } from "@/lib/admin/actions";
 import { getPublicSponsors } from "@/lib/admin/actions";
 
@@ -66,7 +67,8 @@ export default async function Home() {
               </div>
             </div>
             <div className="hero__media home-reveal">
-              <Image src="/hero-image.jpg" alt="Students at an NSBE Unilorin chapter event on campus" width={600} height={400} />
+              <Image src="/nsbe-hero.png" alt="Students at an NSBE Unilorin chapter event on campus" width={600} height={400} />
+              {/* <Image src="/hero-image.jpg" alt="Students at an NSBE Unilorin chapter event on campus" width={600} height={400} /> */}
               <div className="hero__image-note">
                 <span className="hero__image-note-dot" aria-hidden="true" />
                 A community moving engineering forward
@@ -183,48 +185,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Sponsors */}
-      {sponsors.length > 0 && (
-        <section className="section sponsors">
-          <div className="container">
-            <p className="eyebrow home-reveal">Sponsors &amp; partners</p>
-            <h2 className="h2 sponsors__title">Organisations that support the chapter.</h2>
-            <div className="sponsors__grid home-reveal">
-              {sponsors.map((p) => {
-                const logoSrc = p.logo || "/partners/siemens.svg";
-                return (
-                  <div className="sponsor" key={p.id}>
-                    {p.website ? (
-                      <a
-                        href={p.website.startsWith("http") ? p.website : `https://${p.website}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title={p.name}
-                      >
-                        <Image
-                          src={logoSrc}
-                          alt={p.name}
-                          width={200}
-                          height={100}
-                          unoptimized={logoSrc.startsWith("http") || logoSrc.endsWith(".svg")}
-                        />
-                      </a>
-                    ) : (
-                      <Image
-                        src={logoSrc}
-                        alt={p.name}
-                        width={200}
-                        height={100}
-                        unoptimized={logoSrc.startsWith("http") || logoSrc.endsWith(".svg")}
-                      />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
+      <Sponsors items={sponsors} />
     </div>
   );
 }

@@ -14,7 +14,8 @@ import type { Executive } from "./leadership-types";
 import "./leadership.css";
 
 const SPEED = 40; // drift speed, px per second
-const EASE = "cubic-bezier(0.2, 0.8, 0.2, 1)";
+const OPEN_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
+const CLOSE_EASE = "cubic-bezier(0.4, 0, 0.2, 1)";
 const prefersReduced = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -45,7 +46,7 @@ export default function Leadership({ items, session }: { items: Executive[]; ses
   const sectionRef = useRef<HTMLElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [enterFrom, setEnterFrom] = useState<DOMRect | null>(null);
+  const [enterFrom, setEnterFrom] = useState<{ slug: string; rect: DOMRect } | null>(null);
   const opener = useRef<HTMLElement | null>(null);
   const restoringFocus = useRef(false);
 
@@ -146,7 +147,7 @@ export default function Leadership({ items, session }: { items: Executive[]; ses
     if (drag.current.moved) return;
     opener.current = trigger;
     const photo = trigger?.querySelector<HTMLElement>(".exec-photo");
-    setEnterFrom(photo ? photo.getBoundingClientRect() : null);
+    setEnterFrom(photo ? { slug: items[index].slug, rect: photo.getBoundingClientRect() } : null);
     setActiveIndex(index);
   };
 
@@ -343,7 +344,7 @@ function ProfileDialog({
   onIndex: (i: number) => void;
   onClose: () => void;
   originFor: (slug: string) => DOMRect | null;
-  enterFrom: DOMRect | null;
+  enterFrom: { slug: string; rect: DOMRect } | null;
 }) {
   const ex = items[index];
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -353,8 +354,11 @@ function ProfileDialog({
   const touch = useRef<{ y: number } | null>(null);
   const [closing, setClosing] = useState(false);
 
-  const flipKeyframes = (from: DOMRect, to: DOMRect) =>
-    `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width})`;
+  const flipKeyframes = (from: DOMRect, to: DOMRect) => {
+    const scaleX = from.width / to.width;
+    const scaleY = from.height / to.height;
+    return `translate(${from.left - to.left}px, ${from.top - to.top}px) scaleX(${scaleX}) scaleY(${scaleY})`;
+  };
 
   /* enter: photo lifts out of its card (FLIP) */
   useLayoutEffect(() => {
@@ -363,20 +367,29 @@ function ProfileDialog({
     const to = photo.getBoundingClientRect();
     photo.animate(
       [
-        { transformOrigin: "top left", transform: flipKeyframes(enterFrom, to) },
+        { transformOrigin: "top left", transform: flipKeyframes(enterFrom.rect, to) },
         { transformOrigin: "top left", transform: "none" },
       ],
-      { duration: 380, easing: EASE }
+      { duration: 600, easing: OPEN_EASE }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* scroll lock + initial focus */
   useEffect(() => {
-    const prev = document.documentElement.style.overflow;
-    document.documentElement.style.overflow = "hidden";
-    closeRef.current?.focus();
-    return () => { document.documentElement.style.overflow = prev; };
+    const root = document.documentElement;
+    const prevOverflow = root.style.overflow;
+    const prevPaddingRight = root.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - root.clientWidth;
+    root.style.overflow = "hidden";
+    if (scrollbarWidth > 0) {
+      root.style.paddingRight = `calc(${prevPaddingRight || "0px"} + ${scrollbarWidth}px)`;
+    }
+    closeRef.current?.focus({ preventScroll: true });
+    return () => {
+      root.style.overflow = prevOverflow;
+      root.style.paddingRight = prevPaddingRight;
+    };
   }, []);
 
   /* exit: photo flies back to its card */
@@ -384,7 +397,7 @@ function ProfileDialog({
     if (closing) return;
     setClosing(true);
     const photo = photoRef.current;
-    const from = originFor(ex.slug);
+    const from = enterFrom?.slug === ex.slug ? enterFrom.rect : originFor(ex.slug);
     if (photo && from && !prefersReduced()) {
       const to = photo.getBoundingClientRect();
       const a = photo.animate(
@@ -392,11 +405,11 @@ function ProfileDialog({
           { transformOrigin: "top left", transform: "none" },
           { transformOrigin: "top left", transform: flipKeyframes(from, to) },
         ],
-        { duration: 280, easing: EASE, fill: "forwards" }
+        { duration: 560, easing: CLOSE_EASE, fill: "forwards" }
       );
       a.finished.then(onClose).catch(onClose);
     } else {
-      setTimeout(onClose, prefersReduced() ? 0 : 180);
+      setTimeout(onClose, prefersReduced() ? 0 : 560);
     }
   };
 

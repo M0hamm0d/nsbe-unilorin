@@ -988,10 +988,7 @@ export async function deleteAdminSponsor(id: string): Promise<{ ok: boolean }> {
 
 /** Fetch public visible & confirmed sponsors for the homepage. */
 export async function getPublicSponsors(): Promise<import("./types").Sponsor[]> {
-  if (!isSupabaseConfigured()) {
-    const { SPONSORS } = await import("./mock-data");
-    return SPONSORS.filter((s) => s.visible && s.confirmed);
-  }
+  if (!isSupabaseConfigured()) return [];
 
   try {
     const { data, error } = await supabaseAdmin()
@@ -1001,12 +998,11 @@ export async function getPublicSponsors(): Promise<import("./types").Sponsor[]> 
       .eq("confirmed", true)
       .order("order_index", { ascending: true });
 
-    if (error || !data || data.length === 0) {
-      const { SPONSORS } = await import("./mock-data");
-      return SPONSORS.filter((s) => s.visible && s.confirmed);
+    if (error) {
+      throw error;
     }
 
-    return data.map((s) => ({
+    return (data ?? []).map((s) => ({
       id: s.id,
       name: s.name,
       description: s.description || "",
@@ -1018,9 +1014,6 @@ export async function getPublicSponsors(): Promise<import("./types").Sponsor[]> 
     }));
   } catch (err) {
     console.error("getPublicSponsors error:", err);
-    const { SPONSORS } = await import("./mock-data");
-    return SPONSORS.filter((s) => s.visible && s.confirmed);
+    throw err;
   }
 }
-
-

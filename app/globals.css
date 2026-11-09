@@ -354,19 +354,6 @@ p { margin: 0; }
 .join .link { color: var(--white); }
 @media (min-width: 768px) { .join { padding: 56px 64px; } }
 
-/* Sponsors */
-.sponsors__grid { display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid var(--border); background: var(--white); border-radius: 4px; }
-.sponsor { display: flex; align-items: center; justify-content: center; height: 96px; padding: 20px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.sponsor:nth-child(2n) { border-right: 0; }
-.sponsor:nth-last-child(-n+2) { border-bottom: 0; }
-.sponsor img { max-height: 36px; width: auto; max-width: 100%; object-fit: contain; filter: grayscale(1); opacity: 0.75; transition: filter .2s, opacity .2s; }
-.sponsor:hover img { filter: none; opacity: 1; }
-@media (min-width: 768px) {
-  .sponsors__grid { grid-template-columns: repeat(4, 1fr); }
-  .sponsor, .sponsor:nth-child(2n), .sponsor:nth-last-child(-n+2) { border-right: 1px solid var(--border); border-bottom: 0; height: 112px; }
-  .sponsor:last-child { border-right: 0; }
-}
-
 /* Footer */
 .footer { background: var(--deep); color: var(--on-dark); padding: 56px 0 40px; margin-top: 40px; }
 .footer__grid { display: grid; gap: 32px; grid-template-columns: 1fr 1fr; }
@@ -543,12 +530,6 @@ p { margin: 0; }
 .home-page .join__actions { gap: 22px; }
 .home-page .join .link { transition: color 160ms ease; }
 .home-page .join .link:hover { color: #9ce5ae; }
-
-.home-page .sponsors { padding-top: 12px; }
-.home-page .sponsors__title { max-width: 650px; margin-bottom: 28px; font-size: clamp(30px, 4vw, 42px); letter-spacing: -0.025em; }
-.home-page .sponsors__grid { overflow: hidden; border-radius: 16px; box-shadow: 0 12px 36px rgba(15, 26, 20, 0.045); }
-.home-page .sponsor { transition: background 180ms ease; }
-.home-page .sponsor:hover { background: #fbfdfb; }
 
 .home-page .hero__copy { animation: home-enter 700ms cubic-bezier(0.2, 0.75, 0.25, 1) both; }
 .home-page .hero__media { animation: home-enter 850ms 100ms cubic-bezier(0.2, 0.75, 0.25, 1) both; }
