@@ -166,18 +166,17 @@
 .exec-card--president { width: 100%; margin: 0; }
 .exec-card--president .exec-card__button {
   display: grid;
-  grid-template-columns: minmax(0, .94fr) minmax(0, 1.06fr);
-  min-height: 420px;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  min-height: clamp(480px, 42vw, 540px);
   overflow: hidden;
   border: 1px solid rgba(14, 42, 26, .12);
   border-radius: 20px;
   background: var(--color-green-deep);
   box-shadow: 0 20px 50px rgba(9, 27, 16, .12);
   color: #fff;
-  transition: transform .25s ease, box-shadow .25s ease;
+  transition: box-shadow .25s ease;
 }
 .exec-card--president .exec-card__button:hover {
-  transform: translateY(-3px);
   box-shadow: 0 26px 56px rgba(9, 27, 16, .18);
 }
 .exec-card--president .exec-card__button:focus-visible {
@@ -185,13 +184,12 @@
   outline-offset: 5px;
 }
 .exec-card--president .exec-photo {
-  min-height: 420px;
+  min-height: clamp(480px, 42vw, 540px);
   aspect-ratio: auto;
 }
 .exec-card--president .exec-photo::after { display: none; }
 .exec-card--president .exec-photo__media { border-radius: 0; }
-.exec-card--president .exec-img { transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
-.exec-card--president .exec-card__button:hover .exec-img { transform: scale(1.035); }
+.exec-card--president .exec-img { object-position: center top; }
 .exec-card--president .exec-card__meta {
   position: relative;
   display: flex;
@@ -329,7 +327,7 @@
   .exec-president__note { display: none; }
   .exec-card--president .exec-card__button {
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(260px, 62vw) auto;
+    grid-template-rows: minmax(320px, 98vw) auto;
     min-height: 0;
   }
   .exec-card--president .exec-photo { min-height: 0; }
@@ -359,6 +357,7 @@
   gap: 2.5rem; align-items: center;
 }
 .exec-modal__photo { width: 100%; max-height: calc(100dvh - 8rem); aspect-ratio: 4 / 5; margin-bottom: 9px; }
+.exec-modal__photo::after { display: none; }
 .exec-modal__panel {
   background: var(--color-green-deep); color: #fff;
   border: 1px solid #1f4a2e; border-radius: 20px;
@@ -416,9 +415,9 @@
 .exec-modal button:focus-visible,
 .exec-modal a:focus-visible { outline: 3px solid var(--color-green); outline-offset: 2px; }
 
-.exec-modal.is-closing .exec-modal__scrim { animation: exec-fade-out .42s ease forwards; }
+.exec-modal.is-closing .exec-modal__scrim { animation: exec-fade-out .56s ease forwards; }
 .exec-modal.is-closing .exec-modal__panel,
-.exec-modal.is-closing .exec-modal__close { animation: exec-fade-out .34s ease forwards; }
+.exec-modal.is-closing .exec-modal__close { animation: exec-fade-out .42s ease forwards; }
 
 @keyframes exec-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes exec-fade-out { from { opacity: 1; } to { opacity: 0; } }

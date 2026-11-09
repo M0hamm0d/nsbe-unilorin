@@ -67,7 +67,8 @@ export default async function Home() {
               </div>
             </div>
             <div className="hero__media home-reveal">
-              <Image src="/hero-image.jpg" alt="Students at an NSBE Unilorin chapter event on campus" width={600} height={400} />
+              <Image src="/nsbe-hero.png" alt="Students at an NSBE Unilorin chapter event on campus" width={600} height={400} />
+              {/* <Image src="/hero-image.jpg" alt="Students at an NSBE Unilorin chapter event on campus" width={600} height={400} /> */}
               <div className="hero__image-note">
                 <span className="hero__image-note-dot" aria-hidden="true" />
                 A community moving engineering forward
