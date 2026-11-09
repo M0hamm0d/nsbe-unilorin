@@ -14,7 +14,8 @@ import type { Executive } from "./leadership-types";
 import "./leadership.css";
 
 const SPEED = 40; // drift speed, px per second
-const EASE = "cubic-bezier(0.2, 0.8, 0.2, 1)";
+const OPEN_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
+const CLOSE_EASE = "cubic-bezier(0.65, 0, 0.35, 1)";
 const prefersReduced = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -353,8 +354,11 @@ function ProfileDialog({
   const touch = useRef<{ y: number } | null>(null);
   const [closing, setClosing] = useState(false);
 
-  const flipKeyframes = (from: DOMRect, to: DOMRect) =>
-    `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width})`;
+  const flipKeyframes = (from: DOMRect, to: DOMRect) => {
+    const scaleX = from.width / to.width;
+    const scaleY = from.height / to.height;
+    return `translate(${from.left - to.left}px, ${from.top - to.top}px) scaleX(${scaleX}) scaleY(${scaleY})`;
+  };
 
   /* enter: photo lifts out of its card (FLIP) */
   useLayoutEffect(() => {
@@ -366,7 +370,7 @@ function ProfileDialog({
         { transformOrigin: "top left", transform: flipKeyframes(enterFrom, to) },
         { transformOrigin: "top left", transform: "none" },
       ],
-      { duration: 380, easing: EASE }
+      { duration: 480, easing: OPEN_EASE }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -392,11 +396,11 @@ function ProfileDialog({
           { transformOrigin: "top left", transform: "none" },
           { transformOrigin: "top left", transform: flipKeyframes(from, to) },
         ],
-        { duration: 280, easing: EASE, fill: "forwards" }
+        { duration: 420, easing: CLOSE_EASE, fill: "forwards" }
       );
       a.finished.then(onClose).catch(onClose);
     } else {
-      setTimeout(onClose, prefersReduced() ? 0 : 180);
+      setTimeout(onClose, prefersReduced() ? 0 : 420);
     }
   };
 

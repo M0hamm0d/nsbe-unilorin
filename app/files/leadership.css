@@ -350,7 +350,7 @@
 }
 .exec-modal__scrim {
   position: absolute; inset: 0; background: rgba(9, 27, 16, .88);
-  animation: exec-fade-in .25s ease both;
+  animation: exec-fade-in .34s ease both;
 }
 .exec-modal__dialog {
   position: relative; width: 100%; max-width: 68rem;
@@ -364,9 +364,9 @@
   border: 1px solid #1f4a2e; border-radius: 20px;
   max-height: calc(100dvh - 4rem);
   display: flex; flex-direction: column; overflow: hidden;
-  animation: exec-rise .35s .12s cubic-bezier(.2, .8, .2, 1) both;
+  animation: exec-rise .42s .06s cubic-bezier(.22, 1, .36, 1) both;
 }
-.exec-modal__content { padding: 2.25rem 2.25rem 1rem; overflow-y: auto; animation: exec-fade-in .25s ease both; }
+.exec-modal__content { padding: 2.25rem 2.25rem 1rem; overflow-y: auto; animation: exec-fade-in .3s .12s ease both; }
 .exec-modal__role {
   font-size: var(--text-tiny); font-weight: 700; letter-spacing: .1em;
   text-transform: uppercase; color: var(--color-green-light); max-width: none;
@@ -416,9 +416,9 @@
 .exec-modal button:focus-visible,
 .exec-modal a:focus-visible { outline: 3px solid var(--color-green); outline-offset: 2px; }
 
-.exec-modal.is-closing .exec-modal__scrim { animation: exec-fade-out .24s ease forwards; }
+.exec-modal.is-closing .exec-modal__scrim { animation: exec-fade-out .42s ease forwards; }
 .exec-modal.is-closing .exec-modal__panel,
-.exec-modal.is-closing .exec-modal__close { animation: exec-fade-out .18s ease forwards; }
+.exec-modal.is-closing .exec-modal__close { animation: exec-fade-out .34s ease forwards; }
 
 @keyframes exec-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes exec-fade-out { from { opacity: 1; } to { opacity: 0; } }
