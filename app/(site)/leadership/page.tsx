@@ -9,7 +9,7 @@ import "./leadership.css";
 export const metadata: Metadata = {
   title: "Leadership | NSBE Unilorin",
   description:
-    "Meet the executive board and student leaders directing the University of Ilorin chapter of the National Society of Black Engineers.",
+    "Meet the student leaders supporting learning, member growth and innovation across the NSBE Unilorin chapter.",
 };
 
 export const instant = false;
@@ -114,9 +114,7 @@ export default async function LeadershipPage() {
             <h1 className="ld-title">Executive Board</h1>
           </div>
           <p className="ld-lead">
-            Meet the student engineers directing academic excellence,
-            leadership development, and technical innovation across the
-            University of Ilorin.
+            Meet the student leaders supporting learning, member growth and innovation across the chapter.
           </p>
         </div>
       </section>

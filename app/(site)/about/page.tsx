@@ -19,10 +19,10 @@ export default function AboutPage() {
           <div className="ab-reveal">
             <p className="eyebrow">About the chapter</p>
             <h1 className="ab-title">
-              Building a community of engineers who lead, innovate, and inspire.
+              A community for learning, leadership and growth across STEM.
             </h1>
             <p className="lead ab-lead">
-              NSBE Unilorin connects engineering students through shared experiences, learning opportunities, professional development, and a commitment to excellence.
+              NSBE Unilorin brings students together to learn, grow professionally and lead across STEM.
             </p>
           </div>
           <div className="ab-photo ab-photo--hero ab-reveal">

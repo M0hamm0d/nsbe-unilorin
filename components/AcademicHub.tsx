@@ -91,7 +91,7 @@ export default function AcademicHub({ initialResources }: { initialResources?: R
           </div>
           <div>
             <p className="lead ah-lead">
-              Approved past questions, lecture materials and final-year project work across all 10 engineering departments, 100L to 500L. Every resource is checked by chapter executives before it is published.
+              Study smarter with verified past questions, lecture notes and final-year projects across all 10 engineering departments, from 100L to 500L.
             </p>
             <div className="ah-search">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>

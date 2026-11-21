@@ -23,7 +23,7 @@ const events = [
 ];
 
 const programs = [
-  { cls: "pcard--1", img: "/group-study.jpg", category: "Academic", name: "Peer Tutorial Series", text: "Weekly tutorials led by senior students to help 100L–300L students master core courses." },
+  { cls: "pcard--1", img: "/group-study.jpg", category: "Academic", name: "Peer Tutorial Series", text: "Helping students learn and grow together through peer-led tutorials." },
   { cls: "pcard--1", img: "/mentorship.jpg", category: "Career", name: "Industry Mentorship", text: "Get paired with a practising engineer for guidance on internships, skills and career paths." },
   { cls: "pcard--3", img: "/lab-nsbe.jpg", category: "Technical", name: "Build Lab", text: "Hands-on workshops where members design and build real engineering projects together." },
 ];
@@ -54,12 +54,12 @@ export default async function Home() {
         <div className="container">
           <div className="hero__grid">
             <div className="hero__copy home-reveal">
-              <p className="eyebrow">University of Ilorin · Engineering community</p>
+              <p className="eyebrow">University of Ilorin · STEM community</p>
               <h1>
-                Engineers grow stronger when we <span className="u">build together.</span>
+                We grow stronger when we <span className="u">build together.</span>
               </h1>
               <p className="lead hero__lead">
-                NSBE Unilorin brings engineering students together to learn, lead and turn bold ideas into meaningful impact.
+                NSBE Unilorin brings students together to learn, lead and create impact across STEM.
               </p>
               <div className="hero__actions">
                 <Link href="/join" className="btn">Become a member</Link>
@@ -71,7 +71,7 @@ export default async function Home() {
               {/* <Image src="/hero-image.jpg" alt="Students at an NSBE Unilorin chapter event on campus" width={600} height={400} /> */}
               <div className="hero__image-note">
                 <span className="hero__image-note-dot" aria-hidden="true" />
-                A community moving engineering forward
+                A community moving STEM forward
               </div>
             </div>
           </div>
@@ -97,7 +97,7 @@ export default async function Home() {
             <p className="eyebrow">About the chapter</p>
             <h2>NSBE Unilorin is the University of Ilorin chapter of the National Society of Black Engineers.</h2>
             <p className="lead">
-              We support Unilorin engineering students with academic resources, hands-on programs and a community that helps them grow into confident engineers.
+              We support Unilorin students with academic resources, hands-on learning and room to grow across STEM.
             </p>
             <Link href="/about" className="link">Read more about us</Link>
           </div>
@@ -176,7 +176,7 @@ export default async function Home() {
         <div className="container">
           <div className="join home-reveal">
             <h2>Join NSBE Unilorin.</h2>
-            <p>Find your community, grow your skills and help shape what engineering can do.</p>
+            <p>Find your community, grow your skills and help shape what STEM can do.</p>
             <div className="join__actions">
               <Link href="/join" className="btn">Join the chapter</Link>
               <Link href="/tutorial-interest" className="link">Register tutorial interest</Link>

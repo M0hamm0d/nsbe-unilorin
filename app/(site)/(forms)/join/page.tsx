@@ -22,7 +22,7 @@ export default function JoinPage() {
           <p className="eyebrow">Join the chapter</p>
           <h1 className="fm-title">Join NSBE Unilorin.</h1>
           <p className="lead fm-lead">
-            For University of Ilorin engineering students who want to learn, build and belong. Tell us a little about yourself and an executive will get in touch.
+            Interested in NSBE Unilorin? Review the eligibility criteria below, then tell us about yourself and an executive will get in touch.
           </p>
 
           <div className="fm-block">

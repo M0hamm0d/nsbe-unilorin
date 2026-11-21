@@ -71,7 +71,7 @@ export default function Sponsors({ items }: { items: Sponsor[] }) {
           Organisations that support the chapter.
         </h2>
         <p className="home-sponsors__intro">
-          Thank you to the organisations investing in our members, programs and engineering community.
+          Thank you to the organisations investing in our members, programs and STEM community.
         </p>
 
         <ul className={`home-sponsors__grid${items.length === 1 ? " home-sponsors__grid--single" : ""}`}>
