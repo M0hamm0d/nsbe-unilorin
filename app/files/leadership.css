@@ -47,7 +47,7 @@
   font-family: var(--font-display);
   /* max-width: 13ch; */
   font-size: clamp(40px, 6vw, 72px);
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.02;
   letter-spacing: -.04em;
 }
@@ -90,7 +90,7 @@
   color: var(--color-ink);
   font-family: var(--font-display);
   font-size: clamp(25px, 3vw, 34px);
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: -.025em;
   line-height: 1.15;
 }
@@ -241,7 +241,7 @@
   color: #fff;
   font-family: var(--font-display);
   font-size: clamp(32px, 4.2vw, 58px);
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: -.035em;
   line-height: 1.05;
   overflow-wrap: anywhere;

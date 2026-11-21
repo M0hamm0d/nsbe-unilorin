@@ -14,7 +14,7 @@ import type {
   TutorialInterest,
   TutorialStatus,
 } from "./types";
-import { EVENTS, JOINS, RESOURCES, TUTORIALS, USERS } from "./mock-data";
+import { JOINS, RESOURCES, TUTORIALS, USERS } from "./mock-data";
 import { type Resource as PublicResource } from "@/lib/academic-resources";
 import { type ChapterEvent } from "@/lib/events";
 
@@ -337,10 +337,8 @@ export async function getPublicAcademicResources(): Promise<PublicResource[]> {
 /** Fetch a single event by ID for the admin editor. */
 export async function getAdminEventById(id: string): Promise<AdminEvent | null> {
   await guard("events");
-  if (!isSupabaseConfigured()) {
-    const found = EVENTS.find((e) => e.id === id);
-    return found ?? null;
-  }
+  if (!UUID_REGEX.test(id)) return null;
+  if (!isSupabaseConfigured()) throw new Error("Supabase is not configured; event data is unavailable.");
 
   try {
     const { data, error } = await supabaseAdmin()
@@ -349,7 +347,8 @@ export async function getAdminEventById(id: string): Promise<AdminEvent | null> 
       .eq("id", id)
       .maybeSingle();
 
-    if (error || !data) return null;
+    if (error) throw error;
+    if (!data) return null;
 
     return {
       id: data.id,
@@ -370,14 +369,14 @@ export async function getAdminEventById(id: string): Promise<AdminEvent | null> 
     };
   } catch (err) {
     console.error("getAdminEventById error:", err);
-    return null;
+    throw err;
   }
 }
 
 /** Fetch events for the admin panel. */
 export async function getAdminEvents(): Promise<AdminEvent[]> {
   await guard("events");
-  if (!isSupabaseConfigured()) return EVENTS;
+  if (!isSupabaseConfigured()) throw new Error("Supabase is not configured; event data is unavailable.");
 
   try {
     const { data, error } = await supabaseAdmin()
@@ -385,10 +384,8 @@ export async function getAdminEvents(): Promise<AdminEvent[]> {
       .select("*")
       .order("date", { ascending: false });
 
-    if (error || !data) {
-      console.error("Failed to fetch events:", error);
-      return EVENTS;
-    }
+    if (error) throw error;
+    if (!data) throw new Error("Supabase returned no event data.");
 
     return data.map((e) => ({
       id: e.id,
@@ -409,7 +406,7 @@ export async function getAdminEvents(): Promise<AdminEvent[]> {
     }));
   } catch (err) {
     console.error("getAdminEvents error:", err);
-    return EVENTS;
+    throw err;
   }
 }
 
@@ -417,8 +414,14 @@ export async function getAdminEvents(): Promise<AdminEvent[]> {
 export async function saveAdminEvent(event: AdminEvent): Promise<{ ok: boolean; id?: string }> {
   await guard("events");
 
-  console.log("isSupabaseConfigured", isSupabaseConfigured());
-  if (!isSupabaseConfigured()) return { ok: true, id: event.id };
+  if (!isSupabaseConfigured()) {
+    console.error("saveAdminEvent error: Supabase is not configured.");
+    return { ok: false };
+  }
+  if (event.id && !UUID_REGEX.test(event.id)) {
+    console.error("saveAdminEvent error: Refusing to update an event with an invalid ID.");
+    return { ok: false };
+  }
 
   try {
     const slug = event.title
@@ -473,7 +476,14 @@ export async function saveAdminEvent(event: AdminEvent): Promise<{ ok: boolean; 
 export async function deleteAdminEvent(id: string): Promise<{ ok: boolean }> {
   await guard("events");
 
-  if (!isSupabaseConfigured()) return { ok: true };
+  if (!UUID_REGEX.test(id)) {
+    console.error("deleteAdminEvent error: Refusing to delete an event with an invalid ID.");
+    return { ok: false };
+  }
+  if (!isSupabaseConfigured()) {
+    console.error("deleteAdminEvent error: Supabase is not configured.");
+    return { ok: false };
+  }
 
   try {
     const { error } = await supabaseAdmin()
@@ -493,11 +503,7 @@ export async function deleteAdminEvent(id: string): Promise<{ ok: boolean }> {
 
 /** Fetch published chapter events for public pages. */
 export async function getPublicEvents(): Promise<ChapterEvent[]> {
-  if (!isSupabaseConfigured()) {
-    const { EVENTS: mockEvents } = await import("@/lib/events");
-    console.log('no supabase configured', mockEvents)
-    return mockEvents;
-  }
+  if (!isSupabaseConfigured()) throw new Error("Supabase is not configured; event data is unavailable.");
 
   try {
     const { data, error } = await supabaseAdmin()
@@ -506,12 +512,8 @@ export async function getPublicEvents(): Promise<ChapterEvent[]> {
       .eq("status", "published")
       .order("date", { ascending: true });
 
-    if (error || !data || data.length === 0) {
-      const { EVENTS: mockEvents } = await import("@/lib/events");
-      return mockEvents;
-    }
-
-    console.log('supabase configured', data)
+    if (error) throw error;
+    if (!data) throw new Error("Supabase returned no event data.");
 
     return data.map((e) => ({
       id: e.id,
@@ -527,8 +529,7 @@ export async function getPublicEvents(): Promise<ChapterEvent[]> {
     }));
   } catch (err) {
     console.error("getPublicEvents error:", err);
-    const { EVENTS: mockEvents } = await import("@/lib/events");
-    return mockEvents;
+    throw err;
   }
 }
 

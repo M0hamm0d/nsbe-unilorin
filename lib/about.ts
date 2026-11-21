@@ -6,7 +6,7 @@ export const VISION =
   "To envision a world in which engineering is a mainstream word in homes and communities of color, and all Black students can envision themselves as engineers.";
 
 export const WHAT_WE_DO =
-  "At NSBE’s core, our programs form a thriving STEM pathway. Through leadership, technical and academic excellence, and mentoring, we uplift our community. Supporting NSBE cultivates a legacy of future leaders, innovators, and global citizens poised to make lasting positive impacts worldwide.";
+  "We help members learn, lead and solve problems through academic support, practical skills and mentorship.";
 
 export const PILLARS = [
   { title: "Leadership", text: "Members take on chapter roles, run events and learn to lead teams on campus." },
@@ -23,7 +23,7 @@ export const PILLARS = [
 // ];
 export const FACTS = [
   { label: "Institution", value: "University of Ilorin" },
-  { label: "Community", value: "Engineering Students" },
+  { label: "Community", value: "Student Growth" },
   { label: "Chapter", value: "NSBE Unilorin" },
-  { label: "Focus", value: "Engineering Excellence" },
+  { label: "Focus", value: "Learning and Leadership" },
 ];

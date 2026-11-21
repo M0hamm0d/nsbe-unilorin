@@ -96,7 +96,7 @@ export default function Header() {
     <header className="header">
       <div className="container header__inner">
         <Link href="/" className="brand" onClick={() => setOpen(false)}>
-          <Image src="/nsbe-logo.png" alt="NSBE Unilorin official logo" width={100} height={50} />
+          <Image src="/nsbeLogo.png" alt="NSBE Unilorin logo" width={100} height={50} />
           <span>NSBE Unilorin</span>
         </Link>
 

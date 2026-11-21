@@ -1,20 +1,9 @@
 import type {
-  AdminEvent, AdminUser, AuditEntry, JoinRequest, Leader, Program, Project, Resource, Sponsor, SiteSettings, TutorialInterest,
+  AdminUser, AuditEntry, JoinRequest, Leader, Program, Project, Resource, Sponsor, SiteSettings, TutorialInterest,
 } from "./types";
 import { DEMO_USERS } from "./mock-users";
 
-// Everything here is sample data. No real people, partners or events.
-export const EVENTS: AdminEvent[] = [
-  { id: "ev1", title: "Engineering Career Night", description: "An evening of conversations with practising engineers about internships, skills and careers.", date: "2026-11-07", startTime: "17:00", endTime: "19:30", venue: "Faculty of Engineering Auditorium", organizer: "NSBE Unilorin", registrationUrl: "https://forms.example.com/career-night", registrationDeadline: "2026-11-05", status: "published", confirmed: true, updatedAt: "2026-10-17" },
-  { id: "ev2", title: "Intro to Arduino & Embedded Systems", description: "A hands-on introduction to microcontrollers.", date: "2026-11-21", startTime: "10:00", venue: "Computer Engineering Lab", organizer: "Technical Committee", registrationUrl: "https://forms.example.com/arduino", status: "published", confirmed: true, updatedAt: "2026-10-12" },
-  { id: "ev3", title: "100L Tutorial: Engineering Mathematics", description: "A revision tutorial for first-year students.", date: "2026-12-05", startTime: "15:00", venue: "LT 2, Faculty of Engineering", organizer: "Academic Committee", status: "published", confirmed: true, updatedAt: "2026-09-28" },
-  { id: "ev4", title: "Freshers’ Welcome & Chapter Tour", description: "Welcome session for new engineering students.", date: "2026-10-03", startTime: "14:00", venue: "Faculty of Engineering Quadrangle", organizer: "NSBE Unilorin", status: "published", confirmed: true, updatedAt: "2026-10-05" },
-  { id: "ev5", title: "Python for Engineers Workshop", description: "Workshop on scripting for engineering problems.", date: "2026-07-18", startTime: "10:00", venue: "Computer Engineering Lab", organizer: "Technical Committee", status: "published", confirmed: true, updatedAt: "2026-07-19" },
-  { id: "ev6", title: "New Members Orientation Day", description: "Orientation for new members.", date: "2027-01-16", startTime: "11:00", venue: "", organizer: "NSBE Unilorin", status: "draft", confirmed: false, updatedAt: "2026-10-19" },
-  { id: "ev7", title: "Alumni Mentorship Panel", description: "", date: "", startTime: "", venue: "", organizer: "NSBE Unilorin", status: "draft", confirmed: false, updatedAt: "2026-10-18" },
-  { id: "ev8", title: "Past Question Collection Drive", description: "Collected past questions from students.", date: "2026-03-14", startTime: "09:00", venue: "Faculty of Engineering", organizer: "Academic Committee", status: "archived", confirmed: true, updatedAt: "2026-03-20" },
-];
-
+// Sample data for other admin areas. No real people or partners.
 export const PROGRAMS: Program[] = [
   { id: "pg1", title: "Peer Tutorial Series", description: "Weekly tutorials led by senior students to help 100L–300L students master core courses.", category: "Academic", image: "peer-tutorials.jpg", ctaLabel: "Learn more", ctaUrl: "/programs/peer-tutorials", status: "published", visible: true, updatedAt: "2026-10-17" },
   { id: "pg2", title: "Industry Mentorship", description: "Get paired with a practising engineer for guidance on internships, skills and careers.", category: "Career", image: "mentorship.jpg", ctaLabel: "Apply", ctaUrl: "/programs/mentorship", status: "published", visible: true, updatedAt: "2026-10-10" },
