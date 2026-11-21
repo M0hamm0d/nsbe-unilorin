@@ -1,0 +1,39 @@
+.event-recap-intro { padding: 32px 0 40px; background: var(--bg); border-bottom: 1px solid var(--border); }
+.event-recap-back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--green-text); font-size: 14px; font-weight: 600; }
+.event-recap-back:hover { text-decoration: underline; text-underline-offset: 4px; }
+.event-recap-heading { max-width: 820px; padding-top: 40px; }
+.event-recap-heading .eyebrow { margin-bottom: 14px; }
+.event-recap-heading h1 { font-size: clamp(36px, 6vw, 60px); line-height: 1.08; letter-spacing: -0.035em; }
+.event-recap-date { margin-top: 18px; color: var(--muted); font-size: 16px; }
+
+.event-recap-content { padding: 40px 0 64px; }
+.event-recap-grid { display: grid; gap: 24px; align-items: start; }
+.event-recap-story, .event-recap-details { overflow: hidden; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); }
+.event-recap-image { position: relative; aspect-ratio: 16 / 9; background: var(--tint); }
+.event-recap-image img { object-fit: cover; }
+.event-recap-copy { padding: 28px 24px 32px; }
+.event-recap-copy .eyebrow, .event-recap-details .eyebrow { margin-bottom: 10px; }
+.event-recap-copy h2, .event-recap-details h2 { font-size: clamp(22px, 3vw, 28px); }
+.event-recap-summary { margin-top: 14px; color: var(--muted); font-size: 16px; line-height: 1.75; white-space: pre-line; }
+.event-recap-pending { padding: 16px; background: var(--bg); border-radius: 10px; }
+
+.event-recap-details { padding: 24px; }
+.event-recap-details dl { margin: 22px 0 0; }
+.event-recap-details dl > div { display: grid; grid-template-columns: 90px 1fr; gap: 14px; padding: 14px 0; border-top: 1px solid var(--border); }
+.event-recap-details dt { color: var(--muted); font-size: 14px; }
+.event-recap-details dd { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
+.event-recap-details .btn { display: inline-flex; justify-content: center; margin-top: 18px; }
+
+.event-recap-next { padding: 28px 0; background: #edf1ea; border-top: 1px solid var(--border); }
+.event-recap-next .container { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; }
+.event-recap-next p { font-weight: 600; }
+.event-recap-next .link { color: var(--green-text); font-weight: 600; }
+
+@media (min-width: 900px) {
+  .event-recap-intro { padding: 40px 0 56px; }
+  .event-recap-heading { padding-top: 56px; }
+  .event-recap-content { padding: 56px 0 80px; }
+  .event-recap-grid { grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.8fr); gap: 32px; }
+  .event-recap-copy { padding: 36px 40px 42px; }
+  .event-recap-details { padding: 32px; }
+}
