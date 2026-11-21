@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { EVENTS } from "@/lib/admin/mock-data";
 import type { AdminEvent } from "@/lib/admin/types";
 import { fmtDate, fmtTime, isPast, nowISO } from "@/lib/admin/format";
 import { saveAdminEvent, deleteAdminEvent } from "@/lib/admin/actions";
@@ -31,9 +30,7 @@ export function EventPreview({ e }: { e: AdminEvent }) {
 }
 
 export default function EventsManager({ initialItems }: { initialItems?: AdminEvent[] } = {}) {
-  const [items, setItems] = useState<AdminEvent[]>(
-    initialItems && initialItems.length > 0 ? initialItems : EVENTS
-  );
+  const [items, setItems] = useState<AdminEvent[]>(initialItems ?? []);
   const { toast, audit } = useAdmin();
   const [tab, setTab] = useState<Tab>("published");
   const [q, setQ] = useState("");
@@ -49,13 +46,6 @@ export default function EventsManager({ initialItems }: { initialItems?: AdminEv
     } catch {}
   }, []);
 
-  // Sync if initialItems updates
-  useEffect(() => {
-    if (initialItems && initialItems.length > 0) {
-      setItems(initialItems);
-    }
-  }, [initialItems]);
-
   const inTab = (e: AdminEvent, t: Tab) =>
     t === "published" ? e.status === "published" && !isPast(e.date)
     : t === "past" ? e.status === "published" && isPast(e.date)
@@ -70,18 +60,27 @@ export default function EventsManager({ initialItems }: { initialItems?: AdminEv
 
   async function setStatus(e: AdminEvent, status: AdminEvent["status"], msg: string) {
     const next = { ...e, status, updatedAt: nowISO().slice(0, 10) };
+    const result = await saveAdminEvent(next);
+    if (!result.ok) {
+      toast(`Could not update “${e.title}”. Please try again.`, "bad");
+      return;
+    }
     setItems((prev) => prev.map((x) => (x.id === e.id ? next : x)));
+    setDel((current) => current?.id === e.id ? null : current);
     audit(`${msg} ${e.title}`);
     toast(`${msg} “${e.title}”.`);
-    await saveAdminEvent(next);
   }
 
   async function handleDelete(target: AdminEvent) {
+    const result = await deleteAdminEvent(target.id);
+    if (!result.ok) {
+      toast(`Could not delete “${target.title}”. Please try again.`, "bad");
+      return;
+    }
     setItems((prev) => prev.filter((x) => x.id !== target.id));
     audit(`Deleted event ${target.title}`);
     toast(`Deleted “${target.title}”.`);
     setDel(null);
-    await deleteAdminEvent(target.id);
   }
 
   return (

@@ -6,6 +6,9 @@ import Leadership from "@/app/files/Leadership";
 import Sponsors from "@/components/Sponsors";
 import { getPublicLeaders } from "@/lib/admin/actions";
 import { getPublicSponsors } from "@/lib/admin/actions";
+import { getPublicAcademicResources } from "@/lib/admin/actions";
+import { getPublicEvents } from "@/lib/admin/actions";
+import { dateParts, splitEvents } from "@/lib/events";
 
 export const instant = false;
 
@@ -14,12 +17,6 @@ const quickLinks = [
   { href: "/events", title: "Events", text: "What is coming up, and what we have done." },
   { href: "/programs", title: "Programs", text: "Initiatives and ways to take part." },
   { href: "/join", title: "Get involved", text: "Join the chapter or register tutorial interest." },
-];
-
-const events = [
-  { day: "24", month: "Oct", name: "Engineering Career Night", time: "5:00 PM", venue: "Faculty of Engineering Auditorium", organizer: "NSBE Unilorin" },
-  { day: "07", month: "Nov", name: "Intro to Arduino & Embedded Systems", time: "10:00 AM", venue: "Computer Engineering Lab", organizer: "Technical Committee" },
-  { day: "21", month: "Nov", name: "100L Tutorial: Engineering Mathematics", time: "3:00 PM", venue: "LT 2, Faculty of Engineering", organizer: "Academic Committee" },
 ];
 
 const programs = [
@@ -33,6 +30,10 @@ export default async function Home() {
   const sponsors = await getPublicSponsors();
   await connection();
   const leaders = await getPublicLeaders();
+  const academicResources = await getPublicAcademicResources();
+  const allEvents = await getPublicEvents();
+  const { upcoming: upcomingEvents } = splitEvents(allEvents);
+  const events = upcomingEvents.slice(0, 3);
   const leadershipItems = leaders.map((leader) => ({
     slug: `leader-${leader.id}`,
     name: leader.name,
@@ -113,20 +114,45 @@ export default async function Home() {
             <Link href="/events" className="link">View all events</Link>
           </div>
           <div className="events">
-            {events.map((e) => (
-              <article className="event home-reveal" key={e.name}>
-                <div className="event__date">
-                  {e.day}
-                  <small>{e.month}</small>
-                </div>
+            {events.length > 0 ? (
+              events.map((event) => {
+                const date = dateParts(event.date);
+                return (
+                  <article className="event home-reveal" key={event.id}>
+                    <div className="event__date">
+                      {date.day}
+                      <small>{date.month}</small>
+                    </div>
+                    <div>
+                      <span className="badge">Upcoming</span>
+                      <h3 className="event__title">{event.name}</h3>
+                      <p className="event__meta">
+                        {[event.time, event.venue, event.organizer].filter(Boolean).join(" · ")}
+                      </p>
+                    </div>
+                    {event.registerUrl ? (
+                      <Link href={event.registerUrl} className="link">
+                        Register
+                      </Link>
+                    ) : (
+                      <Link href="/events" className="link">
+                        Event details
+                      </Link>
+                    )}
+                  </article>
+                );
+              })
+            ) : (
+              <div className="event home-reveal">
+                <div />
                 <div>
                   <span className="badge">Upcoming</span>
-                  <h3 className="event__title">{e.name}</h3>
-                  <p className="event__meta">{e.time} · {e.venue} · {e.organizer}</p>
+                  <h3 className="event__title">No events scheduled right now</h3>
+                  <p className="event__meta">Check back soon or follow our channels for updates.</p>
                 </div>
-                <Link href="/events" className="link">Register</Link>
-              </article>
-            ))}
+                <Link href="/events" className="link">View events</Link>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -167,7 +193,7 @@ export default async function Home() {
             </p>
             <Link href="/academic-hub" className="link">Open the Academic Hub</Link>
           </div>
-          <AcademicHubPreview />
+          <AcademicHubPreview initialResources={academicResources} />
         </div>
       </section>
 

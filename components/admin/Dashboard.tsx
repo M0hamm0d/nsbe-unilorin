@@ -5,7 +5,7 @@ import { useAdmin } from "./AdminProvider";
 import { Badge, Card, CardHead, PageHeader } from "./ui";
 import Icon from "./Icon";
 import { useMockCollection, resetMockData } from "@/lib/admin/use-mock";
-import { AUDIT, EVENTS, PROGRAMS, PROJECTS, RESOURCES, TUTORIALS } from "@/lib/admin/mock-data";
+import { AUDIT, PROGRAMS, PROJECTS, RESOURCES, TUTORIALS } from "@/lib/admin/mock-data";
 import { can } from "@/lib/admin/permissions";
 import { fmtDate, fmtTime, isPast } from "@/lib/admin/format";
 import type { AdminEvent, AuditEntry, Program, Project, Resource, TutorialInterest } from "@/lib/admin/types";
@@ -13,9 +13,9 @@ import type { AdminEvent, AuditEntry, Program, Project, Resource, TutorialIntere
 const regLabel = (e: AdminEvent) =>
   !e.registrationUrl ? "No link set" : e.registrationDeadline && e.registrationDeadline < new Date().toISOString().slice(0, 10) ? "Closed" : e.registrationDeadline ? `Open · closes ${fmtDate(e.registrationDeadline)}` : "Open";
 
-export default function Dashboard() {
+export default function Dashboard({ initialEvents = [] }: { initialEvents?: AdminEvent[] }) {
   const { user } = useAdmin();
-  const ev = useMockCollection<AdminEvent>("events", EVENTS).items;
+  const ev = initialEvents;
   const pg = useMockCollection<Program>("programs", PROGRAMS).items;
   const rs = useMockCollection<Resource>("resources", RESOURCES).items;
   const pj = useMockCollection<Project>("projects", PROJECTS).items;
