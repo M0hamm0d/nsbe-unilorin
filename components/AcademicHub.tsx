@@ -26,18 +26,22 @@ export default function AcademicHub({ initialResources }: { initialResources?: R
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [ready, setReady] = useState(false);
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
 
   // Restore state from the URL once on mount
   useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const t = p.get("type") as ResourceType | null;
-    if (t && RESOURCE_TYPES.some((x) => x.value === t)) setType(t);
-    setQuery(p.get("q") ?? "");
-    setLevels(p.get("level")?.split(",").filter((l) => (LEVELS as readonly string[]).includes(l)) ?? []);
-    setDepts(p.get("dept")?.split(",").filter((d) => DEPARTMENTS.some((x) => x.slug === d)) ?? []);
-    const s = p.get("sort") as Sort | null;
-    if (s === "code" || s === "title") setSort(s);
-    setReady(true);
+    const frame = window.requestAnimationFrame(() => {
+      const p = new URLSearchParams(window.location.search);
+      const t = p.get("type") as ResourceType | null;
+      if (t && RESOURCE_TYPES.some((x) => x.value === t)) setType(t);
+      setQuery(p.get("q") ?? "");
+      setLevels(p.get("level")?.split(",").filter((l) => (LEVELS as readonly string[]).includes(l)) ?? []);
+      setDepts(p.get("dept")?.split(",").filter((d) => DEPARTMENTS.some((x) => x.slug === d)) ?? []);
+      const s = p.get("sort") as Sort | null;
+      if (s === "code" || s === "title") setSort(s);
+      setReady(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   // Keep the URL in sync so filters survive opening a resource and coming back
@@ -54,7 +58,10 @@ export default function AcademicHub({ initialResources }: { initialResources?: R
   }, [ready, query, type, levels, depts, sort]);
 
   // Reset pagination whenever the filters change
-  useEffect(() => setVisible(PAGE_SIZE), [query, type, levels, depts, sort]);
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setVisible(PAGE_SIZE));
+    return () => window.cancelAnimationFrame(frame);
+  }, [query, type, levels, depts, sort]);
 
   const sourceData = initialResources && initialResources.length > 0 ? initialResources : RESOURCES;
 
@@ -80,6 +87,19 @@ export default function AcademicHub({ initialResources }: { initialResources?: R
   const activeCount = levels.length + depts.length + (query ? 1 : 0);
   const clearAll = () => { setQuery(""); setLevels([]); setDepts([]); };
 
+  const suggestions = useMemo(() => {
+    const search = query.trim().toLowerCase();
+    if (!search) return [];
+    return sourceData
+      .filter((resource) =>
+        `${resource.code} ${resource.title} ${deptName(resource.dept)} ${resource.detail}`
+          .toLowerCase()
+          .includes(search)
+      )
+      .sort((a, b) => a.code.localeCompare(b.code))
+      .slice(0, 6);
+  }, [sourceData, query]);
+
   return (
     <div className="academic-hub-page">
       {/* Intro */}
@@ -91,12 +111,47 @@ export default function AcademicHub({ initialResources }: { initialResources?: R
           </div>
           <div>
             <p className="lead ah-lead">
-              Approved past questions, lecture materials and final-year project work across all 10 engineering departments, 100L to 500L. Every resource is checked by chapter executives before it is published.
+              Study smarter with verified past questions, lecture notes and final-year projects across all 10 engineering departments, from 100L to 500L.
             </p>
             <div className="ah-search">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
               <label htmlFor="ah-q" className="sr-only">Search resources</label>
-              <input id="ah-q" type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Course code, course name or topic, e.g. CPE 311" />
+              <input
+                id="ah-q"
+                type="search"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded={suggestionsOpen && suggestions.length > 0}
+                aria-controls="ah-search-suggestions"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setSuggestionsOpen(true);
+                }}
+                onFocus={() => setSuggestionsOpen(true)}
+                onBlur={() => window.setTimeout(() => setSuggestionsOpen(false), 150)}
+                placeholder="Course code, course name or topic, e.g. CPE 311"
+              />
+              {suggestionsOpen && suggestions.length > 0 && (
+                <ul className="ah-search-suggestions" id="ah-search-suggestions" role="listbox">
+                  {suggestions.map((suggestion) => (
+                    <li key={suggestion.id} role="option" aria-selected="false">
+                      <button
+                        type="button"
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => {
+                          setQuery(`${suggestion.code} ${suggestion.title}`);
+                          setSuggestionsOpen(false);
+                        }}
+                      >
+                        <b>{suggestion.code}</b>
+                        <span>{suggestion.title}</span>
+                        <small>{deptName(suggestion.dept)} · {suggestion.level}</small>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>

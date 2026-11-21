@@ -35,7 +35,7 @@
   margin-top: 8px;
   font-family: var(--font-serif), Georgia, serif;
   font-size: clamp(40px, 6vw, 68px);
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.04;
   letter-spacing: -0.025em;
 }
@@ -129,7 +129,7 @@
   max-width: 14ch;
   font-family: var(--font-serif), Georgia, serif;
   font-size: clamp(34px, 5vw, 54px);
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.08;
   letter-spacing: -0.02em;
   overflow-wrap: anywhere;
@@ -192,7 +192,7 @@
 .ld-executives__heading h2 {
   font-family: var(--font-serif), Georgia, serif;
   font-size: clamp(28px, 3.4vw, 38px);
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.15;
 }
 
@@ -238,7 +238,7 @@
 .ld-card__name {
   font-family: var(--font-serif), Georgia, serif;
   font-size: clamp(20px, 2.3vw, 25px);
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.17;
   overflow-wrap: anywhere;
 }

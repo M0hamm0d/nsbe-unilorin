@@ -46,7 +46,7 @@ export default async function EventsPage() {
           </div>
           <div>
             <p className="lead ev-lead">
-              Find your next chance to connect, build skills and move engineering forward with our community.
+              Connect, build skills and explore ideas with our STEM community.
             </p>
             <nav className="ev-jumps" aria-label="On this page">
               <a href="#upcoming" className="ev-jump ev-jump--on">Coming up <b>{upcoming.length}</b></a>

@@ -77,7 +77,8 @@ export default function ContactPage() {
         <div style={{ marginTop: "40px", background: "var(--bg)", border: "1px solid var(--border)", borderRadius: "8px", padding: "32px", textAlign: "center" }}>
           <h3 style={{ fontSize: "1.25rem", fontWeight: 700, marginBottom: "8px" }}>Looking to join the chapter?</h3>
           <p style={{ color: "var(--muted)", fontSize: "0.9375rem", marginBottom: "20px" }}>
-            Engineering students across 100L to 500L can register membership interest online in under 2 minutes.
+            Interested in joining?{" "}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="link">Email us</a> to confirm your eligibility.
           </p>
           <div style={{ display: "flex", justifyContent: "center", gap: "16px", flexWrap: "wrap" }}>
             <Link href="/join" className="btn">

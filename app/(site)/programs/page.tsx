@@ -10,7 +10,7 @@ import Image from "next/image";
 export const metadata: Metadata = {
   title: "Programs & Scholarships | NSBE Unilorin",
   description:
-    "NSBE Unilorin programs, scholarships for engineering students, and how organisations can partner with the chapter.",
+    "NSBE Unilorin programs, scholarships, and how organisations can partner with the chapter.",
 };
 
 export const instant = false;
@@ -36,7 +36,7 @@ export default async function ProgramsPage() {
           </div>
           <div>
             <p className="lead pr-lead">
-              Programs, scholarships and partnerships that help Unilorin engineering students learn, build and succeed.
+              Programs and opportunities that help Unilorin students learn, build skills and grow across STEM.
             </p>
             <nav className="pr-jumps" aria-label="On this page">
               <a href="#programs" className="pr-jump pr-jump--on">Programs</a>

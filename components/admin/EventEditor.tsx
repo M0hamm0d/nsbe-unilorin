@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { AdminEvent } from "@/lib/admin/types";
-import { nowISO, uid } from "@/lib/admin/format";
+import { nowISO } from "@/lib/admin/format";
 import { saveAdminEvent, deleteAdminEvent } from "@/lib/admin/actions";
 import { useAdmin } from "./AdminProvider";
 import { AreaField, Banner, Card, Check, ConfirmDialog, EmptyState, ImageDrop, PageHeader, StatusBadge, TextField } from "./ui";
@@ -12,7 +12,7 @@ import { EventPreview } from "./EventsManager";
 import Icon from "./Icon";
 
 const blank = (): AdminEvent => ({
-  id: uid("ev"),
+  id: "",
   title: "",
   description: "",
   date: "",
@@ -51,14 +51,6 @@ export default function EventEditor({
   const [show, setShow] = useState(false);
   const [del, setDel] = useState(false);
 
-  useEffect(() => {
-    if (initialEvent) {
-      setF({ ...initialEvent });
-    } else if (isNew) {
-      setF(blank());
-    }
-  }, [initialEvent, isNew]);
-
   if (!isNew && !initialEvent && !f) {
     return (
       <EmptyState
@@ -79,11 +71,13 @@ export default function EventEditor({
   async function save(next: AdminEvent, msg: string) {
     const rec = { ...next, updatedAt: nowISO().slice(0, 10) };
     setF(rec);
-    audit(`${msg} ${rec.title || "an event"}`);
-    toast(msg === "Published" ? "Published. It now appears on the public Events page." : "Saved.");
     const res = await saveAdminEvent(rec);
     if (res?.ok) {
+      audit(`${msg} ${rec.title || "an event"}`);
+      toast(msg === "Published" ? "Published. It now appears on the public Events page." : "Saved.");
       router.push("/admin/events");
+    } else {
+      toast(`Could not save “${rec.title || "event"}”. Please try again.`, "bad");
     }
   }
 
@@ -279,8 +273,13 @@ export default function EventEditor({
             className="adm-btn2"
             onClick={async () => {
               const next = { ...f, status: "archived" as const };
+              const result = await saveAdminEvent(next);
+              if (!result.ok) {
+                toast(`Could not archive “${f.title}”. Please try again.`, "bad");
+                return;
+              }
               audit(`Archived ${f.title}`);
-              await saveAdminEvent(next);
+              toast(`Archived “${f.title}”.`);
               router.push("/admin/events");
             }}
           >
@@ -288,9 +287,13 @@ export default function EventEditor({
           </button>
         }
         onConfirm={async () => {
+          const result = await deleteAdminEvent(f.id);
+          if (!result.ok) {
+            toast(`Could not delete “${f.title}”. Please try again.`, "bad");
+            return;
+          }
           audit(`Deleted event ${f.title}`);
           toast("Event deleted.");
-          await deleteAdminEvent(f.id);
           router.push("/admin/events");
         }}
       >
