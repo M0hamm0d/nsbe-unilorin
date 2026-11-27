@@ -60,6 +60,20 @@ function SponsorCard({ sponsor }: { sponsor: Sponsor }) {
   return <div className="home-sponsors__card">{contents}</div>;
 }
 
+export function SponsorGrid({ items }: { items: Sponsor[] }) {
+  if (items.length === 0) return null;
+
+  return (
+    <ul className={`home-sponsors__grid${items.length === 1 ? " home-sponsors__grid--single" : ""}`}>
+      {items.map((sponsor) => (
+        <li key={sponsor.id} className="home-sponsors__item">
+          <SponsorCard sponsor={sponsor} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function Sponsors({ items }: { items: Sponsor[] }) {
   if (items.length === 0) return null;
 
@@ -74,13 +88,7 @@ export default function Sponsors({ items }: { items: Sponsor[] }) {
           Thank you to the organisations investing in our members, programs and STEM community.
         </p>
 
-        <ul className={`home-sponsors__grid${items.length === 1 ? " home-sponsors__grid--single" : ""}`}>
-          {items.map((sponsor) => (
-            <li key={sponsor.id} className="home-sponsors__item">
-              <SponsorCard sponsor={sponsor} />
-            </li>
-          ))}
-        </ul>
+        <SponsorGrid items={items} />
 
         <p className="home-sponsors__cta">
           Interested in supporting the chapter?{" "}

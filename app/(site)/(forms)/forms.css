@@ -4,7 +4,7 @@
 
 .fm-title { font-size: clamp(38px, 6.5vw, 56px); letter-spacing: -0.01em; }
 .fm-lead { font-size: 17px; max-width: 520px; }
-.fm-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 20px; }
+.fm-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 20px; }
 @media (min-width: 640px) { .fm-card { padding: 40px; } }
 
 /* ----- Join page layout ----- */
@@ -59,7 +59,7 @@
 .fm-opt { font-weight: 500; color: var(--muted); }
 .fm-help { font-size: 13px; color: var(--muted); }
 
-.fm-input { width: 100%; height: 52px; padding: 0 16px; font: inherit; font-size: 16px; color: var(--ink); background: var(--white); border: 1px solid var(--border-strong); border-radius: 10px; }
+.fm-input { width: 100%; height: 52px; padding: 0 16px; font: inherit; font-size: 16px; color: var(--ink); background: var(--panel); border: 1px solid var(--border-strong); border-radius: 10px; }
 .fm-input::placeholder { color: var(--muted); }
 .fm-input:focus { outline: 2px solid var(--green); outline-offset: 1px; border-color: var(--green); }
 .fm-textarea { height: auto; min-height: 112px; padding: 14px 16px; line-height: 1.5; resize: vertical; }
@@ -75,7 +75,7 @@
 .fm-chips { display: flex; flex-wrap: wrap; gap: 10px; }
 .fm-chip { position: relative; }
 .fm-chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
-.fm-chip span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; font-size: 15px; font-weight: 500; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--white); transition: background .15s; }
+.fm-chip span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; font-size: 15px; font-weight: 500; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--panel); transition: background .15s; }
 .fm-chip:hover span { background: var(--tint); }
 .fm-chip input:checked + span { background: var(--deep); border-color: var(--deep); color: var(--white); }
 .fm-chip input:focus-visible + span { outline: 2px solid var(--green-text); outline-offset: 3px; }
@@ -83,7 +83,7 @@
 
 /* Checkboxes */
 .fm-check { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; cursor: pointer; }
-.fm-check input, .fm-interest input { appearance: none; flex: none; margin: 0; background: var(--white); border: 1.5px solid var(--border-strong); cursor: pointer; }
+.fm-check input, .fm-interest input { appearance: none; flex: none; margin: 0; background: var(--panel); border: 1.5px solid var(--border-strong); cursor: pointer; }
 .fm-check input { width: 22px; height: 22px; margin-top: 2px; border-radius: 6px; }
 .fm-check input:checked, .fm-interest input:checked {
   background: var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E") center / 14px no-repeat;
@@ -94,7 +94,7 @@
 
 .fm-interests { display: grid; gap: 12px; grid-template-columns: 1fr; }
 @media (min-width: 480px) { .fm-interests { grid-template-columns: 1fr 1fr; } }
-.fm-interest { display: flex; gap: 12px; align-items: center; min-height: 48px; padding: 12px 14px; font-size: 15px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
+.fm-interest { display: flex; gap: 12px; align-items: center; min-height: 48px; padding: 12px 14px; font-size: 15px; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
 .fm-interest input { width: 20px; height: 20px; border-radius: 5px; }
 
 .fm-submit { width: 100%; min-height: 52px; font-size: 16px; }
@@ -106,7 +106,7 @@
 .fm-state--error { border-color: var(--error); }
 .fm-state__icon { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 .fm-state__icon--ok { background: var(--tint); color: var(--green-text); }
-.fm-state__icon--bad { background: var(--white); color: var(--error); border: 1.5px solid var(--error); }
+.fm-state__icon--bad { background: var(--panel); color: var(--error); border: 1.5px solid var(--error); }
 .fm-state__eyebrow { margin: 0; }
 .fm-state--error .fm-state__eyebrow { color: var(--error); }
 .fm-state h2 { font-size: clamp(28px, 4vw, 34px); }

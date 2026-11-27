@@ -3,8 +3,10 @@ import { connection } from "next/server";
 import Link from "next/link";
 import './programs.css'
 import {
-  APPLY_STEPS, PACKET, PARTNERS, PARTNER_STEPS, PROGRAMS, SCHOLARSHIPS, formatDate, isOpen,
+  PACKET, PARTNER_STEPS, PROGRAMS,
 } from "@/lib/programs";
+import { getPublicSponsors } from "@/lib/admin/actions";
+import { SponsorGrid } from "@/components/Sponsors";
 import Image from "next/image";
 
 export const metadata: Metadata = {
@@ -17,14 +19,9 @@ export const instant = false;
 
 // export const revalidate = 3600; // keep open/closed scholarship status fresh
 
-const CalendarIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-    <rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" />
-  </svg>
-);
-
 export default async function ProgramsPage() {
   await connection(); // ensure DB connection is established before rendering page
+  const sponsors = await getPublicSponsors();
   return (
     <>
       {/* Intro */}
@@ -86,63 +83,27 @@ export default async function ProgramsPage() {
               <p className="eyebrow">Scholarships</p>
               <h2 className="pr-h2">Scholarships for Unilorin engineering students.</h2>
             </div>
-            <p className="pr-head__note">Support for students at every level. Check each scholarship’s deadline and eligibility before you apply.</p>
+            <p className="pr-head__note">New scholarships are announced here as soon as they open. Check back soon.</p>
           </div>
 
-          <div className="pr-sc-grid">
-            {SCHOLARSHIPS.map((s) => {
-              const open = isOpen(s.deadline, new Date().toISOString().slice(0, 10));
-              return (
-                <article className="pr-sc" key={s.id}>
-                  <div className="pr-sc__top">
-                    <span className={`pr-status ${open ? "pr-status--open" : "pr-status--closed"}`}>
-                      <CalendarIcon /> {open ? "Applications open" : "Applications closed"}
-                    </span>
-                    <span className="pr-sc__funder">Funded by {s.funder}</span>
-                  </div>
-                  <h3>{s.name}</h3>
-                  <p className="pr-sc__desc">{s.description}</p>
-                  <dl className="pr-kv">
-                    <dt>Amount</dt><dd>{s.amount}</dd>
-                    <dt>Deadline</dt><dd>{formatDate(s.deadline)}</dd>
-                    <dt>Open to</dt><dd>{s.eligibility}</dd>
-                  </dl>
-                  <div className="pr-sc__actions">
-                    {open ? (
-                      <Link href={`${s.href}/apply`} className="btn">
-                        Apply now<span className="sr-only"> for {s.name}</span>
-                      </Link>
-                    ) : (
-                      <span className="pr-na">Applications closed</span>
-                    )}
-                    <Link href={s.href} className="link">View details</Link>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-
-          <div className="pr-apply">
-            <div className="pr-apply__intro">
-              <p className="eyebrow">How to apply</p>
-              <h3>Three steps to a complete application.</h3>
+          <div className="pr-sc-empty">
+            <div className="pr-sc-empty__icon" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                <circle cx="12" cy="8" r="6" />
+                <path d="M8.2 13.2 6 22l6-3 6 3-2.2-8.8" />
+              </svg>
             </div>
-            <ol className="pr-apply__steps">
-              {APPLY_STEPS.map((s, i) => (
-                <li className="pr-step" key={s.title}>
-                  <span className="pr-num">{i + 1}</span>
-                  <div>
-                    <h4>{s.title}</h4>
-                    <p>{s.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          <div className="pr-apply__cta">
-            <Link href="/scholarships/guidelines" className="btn">Open scholarship guidelines</Link>
-            <Link href="/contact" className="link">Ask a scholarship question</Link>
+            <div>
+              <h3>No scholarship is currently open.</h3>
+              <p>
+                There are no scholarships available at the moment. When a new opportunity opens, its deadline
+                and eligibility will be listed right here.
+              </p>
+              <div className="pr-sc-empty__actions">
+                <Link href="/contact" className="link">Ask about upcoming scholarships</Link>
+                <Link href="/join" className="link">Get involved with the chapter</Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -190,14 +151,13 @@ export default async function ProgramsPage() {
             </aside>
           </div>
 
-          <ul className="pr-logos">
-            {PARTNERS.map((p) => (
-              <li key={p.name}>
-                {/* Replace with confirmed partner logos */}
-                <Image src={p.src} alt={p.name} width={100} height={50} />
-              </li>
-            ))}
-          </ul>
+          {sponsors.length > 0 && (
+            <div className="pr-partners">
+              <p className="eyebrow">Our partners</p>
+              <h3 className="pr-partners__title">Organisations that support the chapter.</h3>
+              <SponsorGrid items={sponsors} />
+            </div>
+          )}
         </div>
       </section>
     </>

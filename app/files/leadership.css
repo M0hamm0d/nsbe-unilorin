@@ -282,7 +282,7 @@
 
 .exec-card__order {
   position: absolute; z-index: 2; left: 9px; top: 9px;
-  background: #fff; color: var(--color-ink);
+  background: var(--color-surface); color: var(--color-ink);
   font-size: 8px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
 }
 .exec-card__plus {
