@@ -126,7 +126,7 @@ export default function AcademicHubPreview({ initialResources = [] }: { initialR
             </div>
             {r.available && r.href && r.href !== "#" && r.href.startsWith("http") ? (
               <a href={r.href} target="_blank" rel="noopener noreferrer" className="link">
-                Open PDF<span className="sr-only"> {r.title}</span>
+                Open PDF
               </a>
             ) : (
               <Link href="/academic-hub" className="link">
