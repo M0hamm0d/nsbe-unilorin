@@ -52,7 +52,13 @@ html[data-theme="dark"] .home-page .events {
 html[data-theme="dark"] .home-page .event:hover { background: var(--panel-soft); }
 html[data-theme="dark"] .home-page .hub .panel { box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35); }
 html[data-theme="dark"] .home-page .hero .btn,
-html[data-theme="dark"] .home-page .join .btn { box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45); }
+html[data-theme="dark"] .home-page .join .btn {
+  background: var(--panel-soft);
+  color: var(--ink);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+}
+html[data-theme="dark"] .home-page .hero .btn:hover,
+html[data-theme="dark"] .home-page .join .btn:hover { background: var(--tint); color: var(--ink); }
 
 /* About */
 html[data-theme="dark"] .ab-glance { background: var(--bg); }

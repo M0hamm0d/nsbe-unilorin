@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Sponsor } from "@/lib/admin/types";
+import SponsorMarquee from "./SponsorMarquee";
 import "./sponsors.css";
 
 function Logo({ sponsor }: { sponsor: Sponsor }) {
@@ -60,17 +61,26 @@ function SponsorCard({ sponsor }: { sponsor: Sponsor }) {
   return <div className="home-sponsors__card">{contents}</div>;
 }
 
+const MIN_MARQUEE_ITEMS = 5;
+
+function trackItems(items: Sponsor[]) {
+  if (items.length >= MIN_MARQUEE_ITEMS) return items;
+
+  const repeats = Math.ceil(MIN_MARQUEE_ITEMS / items.length);
+  return Array.from({ length: repeats }, () => items).flat();
+}
+
 export function SponsorGrid({ items }: { items: Sponsor[] }) {
   if (items.length === 0) return null;
 
   return (
-    <ul className={`home-sponsors__grid${items.length === 1 ? " home-sponsors__grid--single" : ""}`}>
-      {items.map((sponsor) => (
-        <li key={sponsor.id} className="home-sponsors__item">
+    <SponsorMarquee>
+      {trackItems(items).map((sponsor, i) => (
+        <li key={`${sponsor.id}-${i}`} className="home-sponsors__item">
           <SponsorCard sponsor={sponsor} />
         </li>
       ))}
-    </ul>
+    </SponsorMarquee>
   );
 }
 

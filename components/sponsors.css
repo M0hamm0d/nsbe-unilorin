@@ -7,17 +7,48 @@
   line-height: 1.7;
 }
 
-.home-sponsors__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
+.home-sponsors__marquee {
+  position: relative;
+  overflow: hidden;
   margin: 48px 0 0;
-  padding: 0;
+  padding: 6px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 56px, #000 calc(100% - 56px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 56px, #000 calc(100% - 56px), transparent 100%);
+}
+
+.home-sponsors__scroller {
+  display: flex;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+  touch-action: pan-y;
+  overscroll-behavior-x: contain;
+}
+
+.home-sponsors__scroller::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.home-sponsors__scroller.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.home-sponsors__track {
+  display: flex;
+  flex: none;
+  gap: 20px;
+  margin: 0;
+  padding: 0 20px 0 0;
   list-style: none;
 }
-.home-sponsors__grid--single { justify-items: center; }
-.home-sponsors__item { display: flex; width: 100%; }
-.home-sponsors__grid--single .home-sponsors__item { max-width: 420px; }
+
+.home-sponsors__item { display: flex; width: min(320px, 78vw); flex: none; }
 
 .home-sponsors__card {
   position: relative;
@@ -113,14 +144,13 @@
 }
 .home-sponsors__link:hover { color: var(--green-text); }
 
-@media (min-width: 40em) {
-  .home-sponsors__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-  .home-sponsors__grid--single { grid-template-columns: minmax(0, 420px); justify-content: center; }
-}
-@media (min-width: 64em) {
-  .home-sponsors__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
-}
 @media (prefers-reduced-motion: reduce) {
+  .home-sponsors__marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .home-sponsors__scroller { cursor: default; }
   .home-sponsors__card--link,
   .home-sponsors__card--link:hover,
   .home-sponsors__logo-image { transition: none; transform: none; }
