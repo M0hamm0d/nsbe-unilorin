@@ -8,7 +8,7 @@
 
 .event-recap-content { padding: 40px 0 64px; }
 .event-recap-grid { display: grid; gap: 24px; align-items: start; }
-.event-recap-story, .event-recap-details { overflow: hidden; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); }
+.event-recap-story, .event-recap-details { overflow: hidden; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); }
 .event-recap-image { position: relative; aspect-ratio: 16 / 9; background: var(--tint); }
 .event-recap-image img { object-fit: cover; }
 .event-recap-copy { padding: 28px 24px 32px; }

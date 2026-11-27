@@ -8,6 +8,7 @@ import { can, ROLE_LABEL } from "@/lib/admin/permissions";
 import type { Role } from "@/lib/admin/types";
 import Icon from "./Icon";
 import Image from "next/image";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function AdminShell({ user, children }: { user: { name: string; email: string; role: Role }; children: ReactNode }) {
   const pathname = usePathname();
@@ -47,6 +48,7 @@ export default function AdminShell({ user, children }: { user: { name: string; e
       <div className="adm-main">
         <header className="adm-tp">
           <button className="adm-menu" aria-label="Open menu" aria-expanded={open} onClick={() => setOpen((v) => !v)}><Icon name="menu" size={22} /></button>
+          <ThemeToggle className="adm-theme-toggle" />
           {/* <span className="adm-tag">Mock data</span> */}
           <Link href="/" target="_blank" className="adm-pv">View public site <Icon name="up" size={16} /></Link>
           <span className="adm-av" title={user.email}>{user.name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()}</span>

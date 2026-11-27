@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { href: "/events", label: "Events" },
@@ -154,18 +155,22 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Mobile Hamburger Toggle */}
-        <button
-          className="menu-btn"
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          aria-controls="mobile-nav"
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
+        <div className="header__actions">
+          <ThemeToggle />
+
+          {/* Mobile Hamburger Toggle */}
+          <button
+            className="menu-btn"
+            aria-label="Toggle menu"
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer */}

@@ -1,0 +1,146 @@
+/*
+  Dark theme.
+  Light mode is untouched: every rule here is scoped to
+  html[data-theme="dark"]. Surfaces use the --panel token, which is white in
+  light mode and a deep green-black here.
+*/
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #07110c;
+  --panel: #0e1b14;
+  --panel-soft: #13221a;
+  --surface: #0e1b14;
+  --ink: #e9f3ed;
+  --muted: #9cb0a3;
+  --border: #1f3329;
+  --border-strong: #2d4837;
+  --tint: #12301f;
+  --deep: #0a2013;
+  --near-black: #040e09;
+  --card-green: #0e4525;
+  --on-dark: #cfe8d7;
+  --on-green: #06180e;
+  --green-text: #66dd90;
+  --pale: #8edba4;
+}
+
+html[data-theme="dark"] .header {
+  background: rgba(7, 17, 12, 0.88);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.35);
+}
+html[data-theme="dark"] .brand { color: var(--ink); }
+html[data-theme="dark"] .nav-dropdown__menu,
+html[data-theme="dark"] .home-hub-suggestions,
+html[data-theme="dark"] .ah-search-suggestions {
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55);
+}
+
+html[data-theme="dark"] .field select,
+html[data-theme="dark"] .fm-select,
+html[data-theme="dark"] .adm-sel {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%239cb0a3' stroke-width='1.6'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+}
+
+/* Home */
+html[data-theme="dark"] .home-page .about__media { box-shadow: 0 18px 48px rgba(0, 0, 0, 0.4); }
+html[data-theme="dark"] .home-page .events {
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.35);
+}
+html[data-theme="dark"] .home-page .event:hover { background: var(--panel-soft); }
+html[data-theme="dark"] .home-page .hub .panel { box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35); }
+html[data-theme="dark"] .home-page .hero .btn,
+html[data-theme="dark"] .home-page .join .btn { box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45); }
+
+/* About */
+html[data-theme="dark"] .ab-glance { background: var(--bg); }
+html[data-theme="dark"] .about-page .ab-card:hover,
+html[data-theme="dark"] .about-page .ab-fact:hover { box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35); }
+
+/* Events */
+html[data-theme="dark"] .ev-past { background: var(--bg); }
+html[data-theme="dark"] .event-recap-next { background: var(--bg); }
+
+/* Programs */
+html[data-theme="dark"] .pr-band { border-color: var(--border); }
+html[data-theme="dark"] .pr-partners { border-color: var(--border); }
+
+/* Academic hub */
+html[data-theme="dark"] .ah-row__warn { color: #e3b06a; }
+html[data-theme="dark"] .ah-pill button:hover { background: rgba(102, 221, 144, 0.16); }
+html[data-theme="dark"] .ah-open:hover,
+html[data-theme="dark"] .ah-btn-outline:hover,
+html[data-theme="dark"] .ev-open:hover { color: var(--on-green); }
+
+/* Forms */
+html[data-theme="dark"] .forms-page { --error: #ff9c8c; }
+html[data-theme="dark"] .fm-input[aria-invalid="true"],
+html[data-theme="dark"] .fm-check input[aria-invalid="true"] { box-shadow: 0 0 0 1px var(--error); }
+
+/* Leadership page */
+html[data-theme="dark"] .ld-page {
+  --ld-green-dark: #66dd90;
+  --ld-green-light: #12301f;
+  --ld-ink: #e9f3ed;
+  --ld-muted: #9cb0a3;
+  --ld-page: var(--bg);
+  --ld-surface: var(--panel);
+  --ld-border: var(--border);
+  --ld-gold: #d8b45c;
+}
+html[data-theme="dark"] .ld-president__image,
+html[data-theme="dark"] .ld-card__image,
+html[data-theme="dark"] .ld-placeholder { background: #16241c; }
+html[data-theme="dark"] .ld-social-link:hover { background: var(--panel-soft); }
+
+/* Homepage leadership carousel */
+html[data-theme="dark"] .exec { --color-surface: var(--panel); }
+html[data-theme="dark"] .exec-placeholder {
+  background: linear-gradient(135deg, #152a1e, #0e2016);
+  color: #8fa99a;
+}
+html[data-theme="dark"] .exec-card:nth-child(4n + 2) .exec-placeholder { background: #122619; }
+html[data-theme="dark"] .exec-card:nth-child(4n + 3) .exec-placeholder { background: #102415; }
+html[data-theme="dark"] .exec-card:nth-child(4n + 4) .exec-placeholder { background: #172c20; }
+
+/* Marquee + sponsors */
+html[data-theme="dark"] .exec-marquee-section .exec-card { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); }
+html[data-theme="dark"] .exec-marquee-section .exec-card:hover { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45); }
+html[data-theme="dark"] .home-sponsors__card { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
+html[data-theme="dark"] .home-sponsors__card--link:hover { box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45); }
+
+/* Coming soon */
+html[data-theme="dark"] .cs-btn-home { background: var(--green); color: var(--on-green); }
+html[data-theme="dark"] .cs-btn-home:hover { background: var(--green-hover); color: var(--on-green); }
+html[data-theme="dark"] .cs-btn-secondary:hover { background: var(--panel-soft); color: var(--ink); }
+html[data-theme="dark"] .cs-gears-svg { filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4)); }
+
+/* Admin */
+html[data-theme="dark"] .adm-root {
+  --g: #2ab456;
+  --gt: #66dd90;
+  --deep: #0a2013;
+  --cg: #0e4525;
+  --tint: #12301f;
+  --pale: #8edba4;
+  --ink: #e9f3ed;
+  --muted: #9cb0a3;
+  --bg: #07110c;
+  --bd: #1f3329;
+  --bds: #2d4837;
+  --err: #ff9c8c;
+  --panel: #0e1b14;
+  --panel-soft: #13221a;
+}
+html[data-theme="dark"] .adm-dialog { background: var(--panel); box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6); }
+html[data-theme="dark"] .adm-dialog::backdrop { background: rgba(0, 0, 0, 0.65); }
+html[data-theme="dark"] .adm-badge--past { background: var(--panel-soft); }
+html[data-theme="dark"] .adm-badge--warn,
+html[data-theme="dark"] .adm-tag { background: #3a2c12; color: #f0c579; }
+html[data-theme="dark"] .adm-badge--bad { background: #3a1b17; color: #ff9c8c; }
+html[data-theme="dark"] .adm-btnd:hover { background: #2a1714; }
+html[data-theme="dark"] .adm-banner--info { background: #0e2a1b; border-color: #1f4a30; color: #9be6b4; }
+html[data-theme="dark"] .adm-banner--warn { background: #3a2c12; border-color: #6b5122; color: #f0c579; }
+html[data-theme="dark"] .adm-banner--danger { background: #3a1b17; border-color: #6b2c24; color: #ff9c8c; }

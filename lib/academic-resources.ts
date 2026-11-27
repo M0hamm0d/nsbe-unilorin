@@ -18,6 +18,7 @@ export const DEPARTMENTS = [
   { slug: "materials-metallurgical", name: "Materials & Metallurgical" },
   { slug: "mechanical", name: "Mechanical" },
   { slug: "water-resources", name: "Water Resources" },
+  { slug: "general", name: "General" },
 ] as const;
 
 export const LEVELS = ["100L", "200L", "300L", "400L", "500L"] as const;
