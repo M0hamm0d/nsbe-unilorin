@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { dateParts, type ChapterEvent } from "@/lib/events";
+import Image from "next/image";
+import { eventDateLabel, type ChapterEvent } from "@/lib/events";
+import { CalendarIcon, PinIcon } from "@/components/EventIcons";
 
 const PAGE_SIZE = 6;
 
@@ -37,17 +39,48 @@ export default function PastEvents({ events }: { events: ChapterEvent[] }) {
 
         <div className="ev-grid">
           {filtered.slice(0, visible).map((e) => {
-            const d = dateParts(e.date);
+            const tags = ["Past event"];
+            const location = [e.venue, e.organizer].filter(Boolean).join(" · ");
+
             return (
               <article className="ev-card" key={e.id}>
-                <span className="ev-status ev-status--past">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="m8 12 3 3 5-6" /></svg>
-                  Past event
-                </span>
-                <p className="ev-card__date">{d.day} {d.month} {d.year}</p>
-                <h3 className="ev-name">{e.name}</h3>
-                <p className="ev-meta">{[e.venue, e.organizer].filter(Boolean).join(" · ")}</p>
-                <Link href={`/events/${e.slug}`} className="link ev-card__link">
+                <div className="ev-card__media">
+                  {e.image ? (
+                    <Image
+                      src={e.image}
+                      alt={`Flyer for ${e.name}`}
+                      width={640}
+                      height={400}
+                      sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 360px"
+                      unoptimized
+                    />
+                  ) : (
+                    <span className="ev-card__media-empty">No image</span>
+                  )}
+                </div>
+
+                <div className="ev-tags">
+                  {tags.map((tag, i) => (
+                    <span key={tag} className={`ev-tag ev-tag--${(i % 4) + 1}`}>{tag}</span>
+                  ))}
+                </div>
+
+                <h3 className="ev-card__title">{e.name}</h3>
+
+                <div className="ev-card__meta">
+                  <p>
+                    <CalendarIcon />
+                    <span>{eventDateLabel(e.date, e.time)}</span>
+                  </p>
+                  {location && (
+                    <p>
+                      <PinIcon />
+                      <span>{location}</span>
+                    </p>
+                  )}
+                </div>
+
+                <Link href={`/events/${e.slug}`} className="ev-card__cta">
                   View recap<span className="sr-only"> of {e.name}</span>
                 </Link>
               </article>

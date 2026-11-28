@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
-import { dateParts, splitEvents, type ChapterEvent } from "@/lib/events";
+import { dateParts, eventDateLabel, splitEvents, type ChapterEvent } from "@/lib/events";
 import { getPublicEvents } from "@/lib/admin/actions";
 import PastEvents from "@/components/PastEvents";
+import { CalendarIcon, PinIcon } from "@/components/EventIcons";
 import Image from "next/image";
 import "./events.css";
 
@@ -66,6 +67,18 @@ export default async function EventsPage() {
                   <p className="ev-next__kicker"><span aria-hidden="true" /> Next up</p>
                   <p className="ev-next__date"><span>{dateParts(next.date).day}</span><span>{dateParts(next.date).month} {dateParts(next.date).year}</span></p>
                   <h2 className="ev-next__name">{next.name}</h2>
+                  <div className="ev-next__meta">
+                    <p>
+                      <CalendarIcon />
+                      <span>{eventDateLabel(next.date, next.time)}</span>
+                    </p>
+                    <p>
+                      <PinIcon />
+                      <span>
+                        {[next.venue ?? "Venue to be confirmed", next.organizer].filter(Boolean).join(" · ")}
+                      </span>
+                    </p>
+                  </div>
                   <dl className="ev-facts">
                     <dt>Time</dt><dd>{next.time ?? "To be confirmed"}</dd>
                     <dt>Venue</dt><dd>{next.venue ?? "To be confirmed"}</dd>
@@ -73,11 +86,11 @@ export default async function EventsPage() {
                   </dl>
                   <div className="ev-next__actions">
                     {next.registerUrl ? (
-                      <Link href={next.registerUrl} className="btn">Register</Link>
+                      <Link href={next.registerUrl} className="ev-next__primary">Register</Link>
                     ) : (
                       <span className="ev-na">Registration not open yet</span>
                     )}
-                    <Link href={`/events/${next.slug}`} className="link">Event details</Link>
+                    <Link href={`/events/${next.slug}`} className="ev-next__secondary">Event details</Link>
                   </div>
                 </div>
                 <div className="ev-next__media">
@@ -112,7 +125,22 @@ export default async function EventsPage() {
                   const incomplete = !e.venue || !e.time;
                   return (
                     <li className="ev-row" key={e.id}>
+                      <div className="ev-row__media">
+                        {e.image ? (
+                          <Image
+                            src={e.image}
+                            alt={`Flyer for ${e.name}`}
+                            width={640}
+                            height={400}
+                            sizes="(max-width: 639px) 100vw, 96px"
+                            unoptimized
+                          />
+                        ) : (
+                          <span className="ev-card__media-empty">No image</span>
+                        )}
+                      </div>
                       <time className="ev-date" dateTime={e.date}><span>{d.day}</span><small>{d.month} {d.year}</small></time>
+                      <span className="ev-tag">Upcoming</span>
                       <div className="ev-row__body">
                         {incomplete && <span className="ev-row__note">Some details to be confirmed</span>}
                         <h3 className="ev-name">{e.name}</h3>

@@ -68,6 +68,14 @@ html[data-theme="dark"] .about-page .ab-fact:hover { box-shadow: 0 14px 32px rgb
 /* Events */
 html[data-theme="dark"] .ev-past { background: var(--bg); }
 html[data-theme="dark"] .event-recap-next { background: var(--bg); }
+html[data-theme="dark"] .ev-card,
+html[data-theme="dark"] .ev-row { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28); }
+html[data-theme="dark"] .ev-card:hover,
+html[data-theme="dark"] .ev-row:hover { box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45); }
+@media (min-width: 640px) {
+  html[data-theme="dark"] .ev-row,
+  html[data-theme="dark"] .ev-row:hover { box-shadow: none; }
+}
 
 /* Programs */
 html[data-theme="dark"] .pr-band { border-color: var(--border); }
